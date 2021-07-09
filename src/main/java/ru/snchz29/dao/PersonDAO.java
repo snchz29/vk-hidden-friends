@@ -22,6 +22,7 @@ public class PersonDAO {
 
     private void deleteObsoleteEntries() {
         jdbcTemplate.update("DELETE FROM person WHERE DATE_PART('day', NOW()::timestamp - created_on) > 1");
+        logger.info("Entries amount: " + getAllPersons().size());
     }
 
     public void savePerson(Person person) {

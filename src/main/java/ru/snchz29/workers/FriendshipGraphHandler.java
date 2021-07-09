@@ -84,7 +84,7 @@ public class FriendshipGraphHandler {
     }
 
     public Map<String, List<String>> findHiddenFriends(Integer seed) throws ClientException, ApiException, InterruptedException {
-        graph = getFriendsGraphRecursion(3, seed);
+        graph = getFriendsGraphRecursion(0, seed);
         Map<String, List<String>> result = new HashMap<>();
 
         for (Integer hiddenId : graph.keySet()) {
@@ -99,7 +99,7 @@ public class FriendshipGraphHandler {
                 String hiddenName = getName(hiddenId);
                 String hidName = getName(hidId);
 
-                if (!result.containsKey(hiddenName)) {
+                if (!result.containsKey(hidName)) {
                     result.put(hidName, new LinkedList<>());
                 }
                 result.get(hidName).add(hiddenName);
