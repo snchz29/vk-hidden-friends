@@ -8,7 +8,6 @@ import ru.snchz29.models.Person;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PersonDAO {
     private final JdbcTemplate jdbcTemplate;
