@@ -14,14 +14,14 @@ public class FriendshipGraphHandler {
     private final PersonDAO personDAO;
     private final double width;
     Map<Integer, List<Integer>> graph;
-    Map<Integer, String> names;
+    Map<Integer, Person> people;
 
     public FriendshipGraphHandler(ApiClient apiClient, PersonDAO personDAO, double width) {
         this.apiClient = apiClient;
         this.personDAO = personDAO;
         this.width = width;
         initGraph();
-        initNames();
+        initPeople();
     }
 
     private void initGraph() {
@@ -29,11 +29,11 @@ public class FriendshipGraphHandler {
         graph = users.stream().collect(Collectors.toMap(Person::getId, Person::getFriends));
     }
 
-    private void initNames() {
+    private void initPeople() {
         List<Person> users = personDAO.getAllPersons();
-        names = users
+        people = users
                 .stream()
-                .collect(Collectors.toMap(Person::getId, (p) -> p.getFirstName() + " " + p.getLastName()));
+                .collect(Collectors.toMap(Person::getId, (instance) -> instance));
     }
 
     private Map<Integer, List<Integer>> getFriendsGraphRecursion(int depth,
@@ -72,20 +72,26 @@ public class FriendshipGraphHandler {
         return friends;
     }
 
-    private String getName(Integer id) throws ClientException, InterruptedException, ApiException {
-        if (names.containsKey(id)) {
-            return names.get(id);
+    private Person getPerson(Integer id) throws ClientException, InterruptedException, ApiException {
+        if (people.containsKey(id)) {
+            return people.get(id);
         }
         Person person = personDAO.getPerson(id);
         if (person != null) {
-            return person.getFirstName() + " " + person.getLastName() + "(" + id + ")";
+            return person;
         }
-        return apiClient.getName(id);
+        String fullName = apiClient.getName(id);
+        return new Person(id,
+                fullName.split(" ")[0],
+                fullName.split(" ")[1],
+                apiClient.getAvatarURL(id),
+                apiClient.getUserFriendsIds(id)
+        );
     }
 
-    public Map<String, List<String>> findHiddenFriends(Integer seed) throws ClientException, ApiException, InterruptedException {
+    public Map<Person, List<Person>> findHiddenFriends(Integer seed) throws ClientException, ApiException, InterruptedException {
         graph = getFriendsGraphRecursion(0, seed);
-        Map<String, List<String>> result = new HashMap<>();
+        Map<Person, List<Person>> result = new HashMap<>();
 
         for (Integer hiddenId : graph.keySet()) {
             for (Integer hidId : graph.get(hiddenId)) {
@@ -96,14 +102,13 @@ public class FriendshipGraphHandler {
                 if (!graph.get(hiddenId).contains(hidId))
                     continue;
 
-                String hiddenName = getName(hiddenId);
-                String hidName = getName(hidId);
+                Person hiddenPerson = getPerson(hiddenId);
+                Person hidPerson = getPerson(hidId);
 
-                if (!result.containsKey(hidName)) {
-                    result.put(hidName, new LinkedList<>());
+                if (!result.containsKey(hidPerson)) {
+                    result.put(hidPerson, new LinkedList<>());
                 }
-                result.get(hidName).add(hiddenName);
-
+                result.get(hidPerson).add(hiddenPerson);
             }
         }
         return result;

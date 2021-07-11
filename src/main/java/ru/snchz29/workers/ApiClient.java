@@ -29,7 +29,7 @@ public class ApiClient {
     public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException, InterruptedException {
         Thread.sleep(TIMEOUT);
         logger.info("Finding friends of " + id);
-        return apiClient.friends().get(serviceActor).lang(Lang.RU).userId(id).execute().getItems();
+        return apiClient.friends().get(serviceActor).userId(id).execute().getItems();
     }
 
     public boolean isUserNotValid(Integer id) throws ClientException, ApiException, InterruptedException {
@@ -57,6 +57,7 @@ public class ApiClient {
         GetResponse user = apiClient
                 .users()
                 .get(serviceActor)
+                .lang(Lang.RU)
                 .userIds(String.valueOf(id))
                 .execute().get(0);
         return user.getFirstName() + " " + user.getLastName() + "(" + id + ")";

@@ -5,8 +5,17 @@
     <title>Result</title>
 </head>
 <body>
-<div th:each="pair : ${pairs}">
-    <p th:text="${pair.getUserName() + ', ' + pair.getFriendName()}"></p>
+<div th:each="user : ${result.keySet()}">
+    <div th:each="friend: ${result.get(user)}">
+        <a style="color: red"
+           th:href="@{https://vk.com/__${'id' + user.getId()}__}"
+           th:target="_blank"
+           th:text="${user.getFirstName() + ' ' + user.getLastName()}"></a>
+        <a style="color: blue"
+           th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
+           th:target="_blank"
+           th:text="${friend.getFirstName() + ' ' + friend.getLastName()}"></a>
+    </div>
 </div>
 </body>
 </html>
