@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.snchz29.models.Person;
-import ru.snchz29.workers.FriendshipGraphHandler;
+import ru.snchz29.workers.FriendshipGraph;
 
 import java.util.List;
 import java.util.Map;
@@ -16,10 +16,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/")
 public class MainController {
-    private final FriendshipGraphHandler friendshipGraphHandler;
+    private final FriendshipGraph friendshipGraph;
 
-    public MainController(FriendshipGraphHandler friendshipGraphHandler) {
-        this.friendshipGraphHandler = friendshipGraphHandler;
+    public MainController(FriendshipGraph friendshipGraph) {
+        this.friendshipGraph = friendshipGraph;
     }
 
     @GetMapping()
@@ -30,7 +30,7 @@ public class MainController {
     @GetMapping("/run/{id}")
     public String run(Model model, @PathVariable("id") int id) {
         try {
-            Map<Person, List<Person>> result = friendshipGraphHandler.findHiddenFriends(id);
+            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id);
             model.addAttribute("result", result);
         } catch (ClientException | InterruptedException | ApiException e) {
             e.printStackTrace();

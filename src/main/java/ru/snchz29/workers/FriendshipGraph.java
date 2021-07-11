@@ -9,14 +9,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class FriendshipGraphHandler {
+public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;
     private final double width;
     Map<Integer, List<Integer>> graph;
     Map<Integer, Person> people;
 
-    public FriendshipGraphHandler(ApiClient apiClient, PersonDAO personDAO, double width) {
+    public FriendshipGraph(ApiClient apiClient, PersonDAO personDAO, double width) {
         this.apiClient = apiClient;
         this.personDAO = personDAO;
         this.width = width;
