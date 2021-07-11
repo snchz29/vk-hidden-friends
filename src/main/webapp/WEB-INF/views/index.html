@@ -5,6 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-
+<a href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120">
+    LOGIN
+</a> <br>
+<label for="vk_id">Id: </label><input type="number" id="vk_id">
+<input id="run" type="button" value="RUN">
+<script>
+    document.getElementById("run").onclick = function () {
+        location.href = `http://localhost:8080/run/${document.getElementById("vk_id").value}`
+    }
+</script>
 </body>
 </html>
