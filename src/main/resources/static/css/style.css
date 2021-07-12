@@ -46,6 +46,10 @@ input:focus {
 
 .pair {
     overflow: hidden;
+    height: 50px;
+    border-bottom: black 1px;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .right-person {
@@ -58,4 +62,12 @@ input:focus {
     float: left;
     width: 50%;
     height: 25px;
+}
+
+.photo {
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 5px;
 }

@@ -14,12 +14,14 @@
     <div th:each="user : ${result.keySet()}">
         <div th:each="friend: ${result.get(user)}" class="pair">
             <div class="left-person">
+                <div class="image"><img th:src="${user.getPhotoUri()}" class="photo"></div>
                 <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
                    th:target="_blank"
                    th:text="${user.getFirstName() + ' ' + user.getLastName()}"></a>
             </div>
 
             <div class="right-person">
+                <img th:src="${friend.getPhotoUri()}" class="photo">
                 <a th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
                    th:target="_blank"
                    th:text="${friend.getFirstName() + ' ' + friend.getLastName()}"></a>
