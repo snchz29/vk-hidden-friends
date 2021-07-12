@@ -34,3 +34,28 @@ input:focus {
     border: none;
     outline: none;
 }
+
+.container {
+    position: absolute;
+    left: 50%;
+    width: 70%;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    margin-top: 10px;
+}
+
+.pair {
+    overflow: hidden;
+}
+
+.right-person {
+    float: right;
+    width: 50%;
+    height: 25px;
+}
+
+.left-person {
+    float: left;
+    width: 50%;
+    height: 25px;
+}

@@ -2,20 +2,29 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <title>Result</title>
 </head>
 
 <body>
-<div th:each="user : ${result.keySet()}">
-    <div th:each="friend: ${result.get(user)}">
-        <a style="color: red"
-           th:href="@{https://vk.com/__${'id' + user.getId()}__}"
-           th:target="_blank"
-           th:text="${user.getFirstName() + ' ' + user.getLastName()}"></a>
-        <a style="color: blue"
-           th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
-           th:target="_blank"
-           th:text="${friend.getFirstName() + ' ' + friend.getLastName()}"></a>
+<div class="container">
+    <div th:each="user : ${result.keySet()}">
+        <div th:each="friend: ${result.get(user)}" class="pair">
+            <div class="left-person">
+                <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
+                   th:target="_blank"
+                   th:text="${user.getFirstName() + ' ' + user.getLastName()}"></a>
+            </div>
+
+            <div class="right-person">
+                <a th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
+                   th:target="_blank"
+                   th:text="${friend.getFirstName() + ' ' + friend.getLastName()}"></a>
+            </div>
+        </div>
     </div>
 </div>
 </body>
