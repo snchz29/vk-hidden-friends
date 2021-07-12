@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/index.css}">
@@ -25,7 +25,7 @@
 
 <script>
     document.getElementById("run").onclick = function () {
-        location.href = `http://localhost:8080/run/${document.getElementById("vk_id").value}`
+        location.href = `http://localhost:8080/result/${document.getElementById("vk_id").value}`
     }
 </script>
 </body>

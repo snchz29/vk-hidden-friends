@@ -80,19 +80,19 @@ public class FriendshipGraph {
         if (person != null) {
             return person;
         }
-        String fullName = apiClient.getName(id);
+        List<String> fullName = Arrays.asList(apiClient.getName(id).split(" "));
         return new Person(id,
-                fullName.split(" ")[0],
-                fullName.split(" ")[1],
+                fullName.get(0),
+                fullName.get(fullName.size() - 1),
                 apiClient.getAvatarURL(id),
                 apiClient.getUserFriendsIds(id)
         );
     }
 
-    public Map<Person, List<Person>> findHiddenFriends(Integer seed) throws ClientException, ApiException, InterruptedException {
-        graph = getFriendsGraphRecursion(0, seed);
-        Map<Person, List<Person>> result = new HashMap<>();
+    public Map<Person, List<Person>> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
+        graph = getFriendsGraphRecursion(depth, seed);
 
+        Map<Person, List<Person>> result = new HashMap<>();
         for (Integer hiddenId : graph.keySet()) {
             for (Integer hidId : graph.get(hiddenId)) {
                 if (graph.get(hidId) == null)

@@ -27,19 +27,14 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/run/{id}")
-    public String run(Model model, @PathVariable("id") int id) {
+    @GetMapping("/result/{id}")
+    public String result(Model model, @PathVariable("id") int id) {
         try {
-            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id);
+            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 0);
             model.addAttribute("result", result);
         } catch (ClientException | InterruptedException | ApiException e) {
             e.printStackTrace();
         }
-        return "result";
-    }
-
-    @GetMapping("/result")
-    public String result() {
         return "result";
     }
 }
