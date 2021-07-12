@@ -1,0 +1,36 @@
+body {
+    background: bisque;
+    font-family: 'Oswald', sans-serif;
+}
+nav {
+    background: coral;
+    display: inline-block;
+    height: 40px;
+    width: 100%;
+}
+
+nav a {
+    display: block;
+    width: 100px;
+    color: black;
+    float: right;
+    font-size: large;
+    text-decoration: none;
+}
+
+.form {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+input {
+    border: none;
+}
+
+input:focus {
+    border: none;
+    outline: none;
+}
