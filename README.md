@@ -39,6 +39,7 @@ ALTER TABLE public.person
 После создания таблиц нужно указать Spring как подключиться к базе данных.
 Для этого следует перейти в файл `src/main/java/ru/snchz29/config/SpringConfig.java` и в бине `dataSource` указать Ваши данные для подключения (URL, Username, Password).
 
+3. В проекте используется сервер Tomcat 9.0.48.
 
 ## Описание
 
