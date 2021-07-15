@@ -58,14 +58,14 @@ public class FriendshipGraph {
     private List<Integer> getFriends(Integer id) throws ClientException, ApiException, InterruptedException {
         List<Integer> friends = graph.get(id);
 
-        if (!graph.containsKey(id)) {
+        if (friends == null) {
             friends = apiClient.getUserFriendsIds(id);
-            String fullName = apiClient.getName(id);
+            Person user = apiClient.getUsers(Collections.singletonList(id)).get(0);
             personDAO.savePerson(
                     new Person(id,
-                            fullName.split(" ")[0],
-                            fullName.split(" ")[1],
-                            apiClient.getAvatarURL(id),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getPhotoUri(),
                             friends
                     ));
         }

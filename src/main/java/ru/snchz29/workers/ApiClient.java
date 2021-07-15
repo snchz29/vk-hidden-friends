@@ -1,5 +1,8 @@
 package ru.snchz29.workers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vk.api.sdk.client.Lang;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.ServiceActor;
@@ -7,11 +10,18 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.photos.Photo;
+import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.web.client.RestTemplate;
+import ru.snchz29.models.Person;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApiClient {
     private final VkApiClient apiClient;
@@ -29,7 +39,28 @@ public class ApiClient {
     public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException, InterruptedException {
         Thread.sleep(TIMEOUT);
         logger.info("Finding friends of " + id);
-        return apiClient.friends().get(serviceActor).userId(id).execute().getItems();
+        return apiClient.friends().get(userActor).userId(id).execute().getItems();
+    }
+
+    public List<Person> getUsers(List<Integer> id) throws InterruptedException, ClientException {
+        Thread.sleep(TIMEOUT);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = apiClient
+                .users()
+                .get(userActor)
+                .lang(Lang.RU)
+                .userIds(id
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList()))
+                .fields(Fields.PHOTO_400).executeAsString();
+        try {
+            String jsonArray = new JSONObject(response).getJSONArray("response").toString();
+            return objectMapper.readValue(jsonArray, new TypeReference<List<Person>>() {});
+        } catch (JsonProcessingException | JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean isUserNotValid(Integer id) throws ClientException, ApiException, InterruptedException {
@@ -56,7 +87,7 @@ public class ApiClient {
             return null;
         GetResponse user = apiClient
                 .users()
-                .get(serviceActor)
+                .get(userActor)
                 .lang(Lang.RU)
                 .userIds(String.valueOf(id))
                 .execute().get(0);

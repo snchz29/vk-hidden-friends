@@ -30,7 +30,7 @@ public class MainController {
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
         try {
-            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 3);
+            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 2);
             model.addAttribute("result", result);
         } catch (ClientException | InterruptedException | ApiException e) {
             e.printStackTrace();

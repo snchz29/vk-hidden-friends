@@ -1,35 +1,29 @@
 package ru.snchz29.models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
+    @JsonAlias("id")
     private Integer id;
+    @JsonAlias("first_name")
     private String firstName;
+    @JsonAlias("last_name")
     private String lastName;
+    @JsonAlias("photo_400")
     private String photoUri;
     private List<Integer> friends;
-
-    public Person() {
-    }
-
-    public Person(Integer id,
-                  String firstName,
-                  String lastName,
-                  String photoUri,
-                  List<Integer> friends) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.photoUri = photoUri;
-        this.friends = friends;
-    }
 
     @Override
     public String toString() {

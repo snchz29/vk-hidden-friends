@@ -36,6 +36,12 @@ public class PersonDAO {
                 createSqlArray(person.getFriends()));
     }
 
+    public void savePeople(List<Person> people){
+        for (Person person : people) {
+            savePerson(person);
+        }
+    }
+
     public List<Person> getAllPersons() {
         return jdbcTemplate.query("SELECT * FROM person", new PersonRowMapper());
     }
