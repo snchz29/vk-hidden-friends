@@ -2,6 +2,7 @@ package ru.snchz29.services;
 
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import org.springframework.beans.factory.annotation.Value;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
 
@@ -12,14 +13,14 @@ import java.util.stream.Collectors;
 public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;
-    private final double width;
+    @Value("${graph.width}")
+    private Integer width;
     Map<Integer, List<Integer>> graph;
     Map<Integer, Person> people;
 
-    public FriendshipGraph(ApiClient apiClient, PersonDAO personDAO, double width) {
+    public FriendshipGraph(ApiClient apiClient, PersonDAO personDAO) {
         this.apiClient = apiClient;
         this.personDAO = personDAO;
-        this.width = width;
         initGraph();
         initPeople();
     }
@@ -48,7 +49,7 @@ public class FriendshipGraph {
         graph.put(id, friends);
 
         for (Integer friend : friends) {
-            if (Math.random() < depth * width / friends.size()) {
+            if (Math.random() < depth * width / (double) friends.size()) {
                 getFriendsGraphRecursion(depth - 1, friend);
             }
         }

@@ -96,7 +96,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public FriendshipGraph friendshipGraphHandler() {
-        return new FriendshipGraph(apiClient(), personDAO(), 5);
+        return new FriendshipGraph(apiClient(), personDAO());
     }
 
     @Bean
