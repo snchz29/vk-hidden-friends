@@ -3,12 +3,14 @@ package ru.snchz29.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import ru.snchz29.models.Person;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Repository
 public class PersonDAO {
     private final JdbcTemplate jdbcTemplate;
     private static final Logger logger = LogManager.getLogger(PersonDAO.class);
@@ -36,7 +38,7 @@ public class PersonDAO {
                 createSqlArray(person.getFriends()));
     }
 
-    public void savePeople(List<Person> people){
+    public void savePeople(List<Person> people) {
         for (Person person : people) {
             savePerson(person);
         }

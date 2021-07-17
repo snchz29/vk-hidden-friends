@@ -1,4 +1,4 @@
-package ru.snchz29.workers;
+package ru.snchz29.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,29 +12,23 @@ import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.client.RestTemplate;
 import ru.snchz29.models.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 public class ApiClient {
     private final VkApiClient apiClient;
     private final UserActor userActor;
     private final ServiceActor serviceActor;
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 200;
-
-    public ApiClient(VkApiClient apiClient, UserActor userActor, ServiceActor serviceActor) {
-        this.apiClient = apiClient;
-        this.userActor = userActor;
-        this.serviceActor = serviceActor;
-    }
 
     public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException, InterruptedException {
         Thread.sleep(TIMEOUT);
@@ -53,10 +47,18 @@ public class ApiClient {
                         .stream()
                         .map(String::valueOf)
                         .collect(Collectors.toList()))
-                .fields(Fields.PHOTO_400).executeAsString();
+                .fields(Fields.PHOTO_400)
+                .executeAsString();
         try {
             String jsonArray = new JSONObject(response).getJSONArray("response").toString();
-            return objectMapper.readValue(jsonArray, new TypeReference<List<Person>>() {});
+            List<Person> people = objectMapper.readValue(jsonArray, new TypeReference<List<Person>>() {
+            });
+            for (Person person : people) {
+                if (person.getPhotoUri() == null) {
+                    person.setPhotoUri("https://vk.com/images/camera_50.png");
+                }
+            }
+            return people;
         } catch (JsonProcessingException | JSONException e) {
             e.printStackTrace();
         }

@@ -20,8 +20,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import ru.snchz29.workers.ApiClient;
-import ru.snchz29.workers.FriendshipGraph;
+import ru.snchz29.services.ApiClient;
+import ru.snchz29.services.FriendshipGraph;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.auth.AuthData;
 
@@ -96,7 +96,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public FriendshipGraph friendshipGraphHandler() {
-        return new FriendshipGraph(apiClient(), personDAO(), 10);
+        return new FriendshipGraph(apiClient(), personDAO(), 5);
     }
 
     @Bean

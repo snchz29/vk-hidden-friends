@@ -1,4 +1,4 @@
-package ru.snchz29.workers;
+package ru.snchz29.services;
 
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
@@ -61,32 +61,24 @@ public class FriendshipGraph {
         if (friends == null) {
             friends = apiClient.getUserFriendsIds(id);
             Person user = apiClient.getUsers(Collections.singletonList(id)).get(0);
-            personDAO.savePerson(
-                    new Person(id,
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getPhotoUri(),
-                            friends
-                    ));
+            user.setFriends(friends);
+            personDAO.savePerson(user);
         }
         return friends;
     }
 
     private Person getPerson(Integer id) throws ClientException, InterruptedException, ApiException {
-        if (people.containsKey(id)) {
-            return people.get(id);
-        }
-        Person person = personDAO.getPerson(id);
+        Person person = people.get(id);
         if (person != null) {
             return person;
         }
-        List<String> fullName = Arrays.asList(apiClient.getName(id).split(" "));
-        return new Person(id,
-                fullName.get(0),
-                fullName.get(fullName.size() - 1),
-                apiClient.getAvatarURL(id),
-                apiClient.getUserFriendsIds(id)
-        );
+        person = personDAO.getPerson(id);
+        if (person != null) {
+            return person;
+        }
+        Person user = apiClient.getUsers(Collections.singletonList(id)).get(0);
+        user.setFriends(apiClient.getUserFriendsIds(id));
+        return user;
     }
 
     public Map<Person, List<Person>> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {

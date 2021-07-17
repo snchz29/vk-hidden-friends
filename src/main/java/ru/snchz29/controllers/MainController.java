@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.snchz29.models.Person;
-import ru.snchz29.workers.FriendshipGraph;
+import ru.snchz29.services.FriendshipGraph;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class MainController {
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
         try {
-            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 2);
+            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 3);
             model.addAttribute("result", result);
         } catch (ClientException | InterruptedException | ApiException e) {
             e.printStackTrace();
