@@ -1,21 +1,30 @@
 body {
-    background: bisque;
+    background: #c0e4fc;
     font-family: 'Oswald', sans-serif;
 }
+
 nav {
-    background: coral;
+    background: #5897bd;
     display: inline-block;
     height: 40px;
     width: 100%;
 }
 
 nav a {
+    margin: 5px 10px;
     display: block;
-    width: 100px;
+    vertical-align: middle;
     color: black;
-    float: right;
     font-size: large;
     text-decoration: none;
+}
+
+#title {
+    float: left;
+}
+
+#login {
+    float: right;
 }
 
 .form {
@@ -28,6 +37,8 @@ nav a {
 
 input {
     border: none;
+    border-radius: 10px;
+    font-family: inherit;
 }
 
 input:focus {
@@ -70,4 +81,16 @@ input:focus {
     height: 50px;
     border-radius: 5px;
     margin-right: 5px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input::-webkit-calendar-picker-indicator {
+    display: none;
 }
