@@ -1,5 +1,6 @@
 package ru.snchz29.controllers;
 
+import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ public class MainController {
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
         try {
-            Map<Person, List<Person>> result = friendshipGraph.findHiddenFriends(id, 3);
+            Multimap<Person, Person> result = friendshipGraph.findHiddenFriends(id, 0);
             model.addAttribute("result", result);
         } catch (ClientException | InterruptedException | ApiException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package ru.snchz29.services;
 
+import com.google.common.collect.*;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,10 +83,18 @@ public class FriendshipGraph {
         return user;
     }
 
-    public Map<Person, List<Person>> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
+    public Multimap<Person, Person> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
         graph = getFriendsGraphRecursion(depth, seed);
-
-        Map<Person, List<Person>> result = new HashMap<>();
+        Comparator<Person> personComparator = (Comparator<Person>) (lhs, rhs) -> {
+            if (lhs == rhs)
+                return 0;
+            if (lhs == null)
+                return -1;
+            if (rhs == null)
+                return 1;
+            return (lhs.getLastName() + lhs.getFirstName()).compareTo(rhs.getLastName() + rhs.getFirstName());
+        };
+        Multimap<Person, Person> result = TreeMultimap.create(personComparator, personComparator);
         for (Integer hiddenId : graph.keySet()) {
             for (Integer hidId : graph.get(hiddenId)) {
                 if (graph.get(hidId) == null)
@@ -97,11 +106,7 @@ public class FriendshipGraph {
 
                 Person hiddenPerson = getPerson(hiddenId);
                 Person hidPerson = getPerson(hidId);
-
-                if (!result.containsKey(hidPerson)) {
-                    result.put(hidPerson, new LinkedList<>());
-                }
-                result.get(hidPerson).add(hiddenPerson);
+                result.put(hidPerson, hiddenPerson);
             }
         }
         return result;

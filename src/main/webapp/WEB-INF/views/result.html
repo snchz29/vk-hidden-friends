@@ -14,19 +14,20 @@
 <div class="container">
     <div th:each="user : ${result.keySet()}">
         <div th:each="friend: ${result.get(user)}" class="pair">
-            <div class="left-person">
-                <div class="image"><img th:src="${user.getPhotoUri()}" class="photo"></div>
-                <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
-                   th:target="_blank"
-                   th:text="${user.getFirstName() + ' ' + user.getLastName()}"></a>
-            </div>
-
-            <div class="right-person">
-                <img th:src="${friend.getPhotoUri()}" class="photo">
-                <a th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
-                   th:target="_blank"
-                   th:text="${friend.getFirstName() + ' ' + friend.getLastName()}"></a>
-            </div>
+            <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
+               th:target="_blank">
+                <div class="left-person">
+                    <div class="image"><img th:src="${user.getPhotoUri()}" class="photo"></div>
+                    <div th:text="${user.getLastName() + ' ' + user.getFirstName()}"></div>
+                </div>
+            </a>
+            <a th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
+               th:target="_blank">
+                <div class="right-person">
+                    <div class="image"><img th:src="${friend.getPhotoUri()}" class="photo"></div>
+                    <div th:text="${friend.getLastName() + ' ' + friend.getFirstName()}"></div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
