@@ -101,22 +101,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public ApiClient apiClient() {
-        return new ApiClient(vkApiClient(), userActor(), serviceActor());
-    }
-
-    @Bean
-    public VkApiClient vkApiClient() {
-        return new VkApiClient(new HttpTransportClient());
-    }
-
-    @Bean
-    public UserActor userActor() {
-        return new UserActor(authData().getAppId(), authData().getAccessToken());
-    }
-
-    @Bean
-    public ServiceActor serviceActor() {
-        return new ServiceActor(authData().getAppId(), authData().getSecureKey(), authData().getServiceToken());
+        return new ApiClient(authData(), new VkApiClient(new HttpTransportClient()));
     }
 
     @Bean

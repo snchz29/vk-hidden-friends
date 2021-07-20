@@ -27,6 +27,12 @@ nav a {
     float: right;
 }
 
+#big-login {
+    color: black;
+    font-size: xx-large;
+    text-decoration: none;
+}
+
 .form {
     position: absolute;
     left: 50%;

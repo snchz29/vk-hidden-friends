@@ -13,6 +13,4 @@ public class AuthData {
     private String secureKey;
     @Value("${auth.SERVICE_TOKEN}")
     private String serviceToken;
-    @Value("${auth.ACCESS_TOKEN}")
-    private String accessToken;
 }

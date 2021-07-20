@@ -3,7 +3,7 @@
 <body>
 <div id="navbar" th:fragment="navbar">
     <a id="title" th:href="@{/}">Hidden Friends</a>
-    <a id="login"
+    <a th:unless="${loggedIn}" id="login"
        href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120">
         LOGIN
     </a>
