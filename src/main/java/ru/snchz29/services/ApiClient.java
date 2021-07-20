@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vk.api.sdk.client.Lang;
 import com.vk.api.sdk.client.VkApiClient;
-import com.vk.api.sdk.client.actors.ServiceActor;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
@@ -13,7 +12,6 @@ import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
-import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
@@ -25,11 +23,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ApiClient {
+    private static final Logger logger = LogManager.getLogger(ApiClient.class);
+    private static final int TIMEOUT = 200;
     private final AuthData authData;
     private final VkApiClient apiClient;
     private UserActor userActor;
-    private static final Logger logger = LogManager.getLogger(ApiClient.class);
-    private static final int TIMEOUT = 200;
 
     public ApiClient(AuthData authData, VkApiClient apiClient) {
         this.authData = authData;
@@ -124,7 +122,7 @@ public class ApiClient {
                     .execute();
             if (authResponse != null) {
                 userActor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
-                logger.info("Successful login");
+                logger.info("Successful login for user " + authResponse.getUserId());
             }
         } catch (ApiException | ClientException e) {
             e.printStackTrace();

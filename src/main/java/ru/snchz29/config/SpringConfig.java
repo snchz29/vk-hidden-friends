@@ -1,8 +1,6 @@
 package ru.snchz29.config;
 
 import com.vk.api.sdk.client.VkApiClient;
-import com.vk.api.sdk.client.actors.ServiceActor;
-import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,10 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import ru.snchz29.auth.AuthData;
+import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph;
-import ru.snchz29.dao.PersonDAO;
-import ru.snchz29.auth.AuthData;
 
 import javax.sql.DataSource;
 

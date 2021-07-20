@@ -8,12 +8,13 @@ import ru.snchz29.models.Person;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class PersonDAO {
-    private final JdbcTemplate jdbcTemplate;
     private static final Logger logger = LogManager.getLogger(PersonDAO.class);
+    private final JdbcTemplate jdbcTemplate;
 
 
     public PersonDAO(JdbcTemplate jdbcTemplate) {

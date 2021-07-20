@@ -1,23 +1,27 @@
 package ru.snchz29.services;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Value;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
 public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;
-    @Value("${graph.width}")
-    private Integer width;
     Map<Integer, List<Integer>> graph;
     Map<Integer, Person> people;
+    @Value("${graph.width}")
+    private Integer width;
 
     public FriendshipGraph(ApiClient apiClient, PersonDAO personDAO) {
         this.apiClient = apiClient;
@@ -85,7 +89,7 @@ public class FriendshipGraph {
 
     public Multimap<Person, Person> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
         graph = getFriendsGraphRecursion(depth, seed);
-        Comparator<Person> personComparator = (Comparator<Person>) (lhs, rhs) -> {
+        Comparator<Person> personComparator = (lhs, rhs) -> {
             if (lhs == rhs)
                 return 0;
             if (lhs == null)

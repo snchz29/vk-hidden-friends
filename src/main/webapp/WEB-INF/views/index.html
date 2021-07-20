@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <title>HiddenFriends</title>
 </head>
@@ -12,16 +12,16 @@
 <nav th:insert="~{navbar :: navbar}"></nav>
 <div class="form">
     <div th:if="${loggedIn}">
-        <label for="vk_id">Id: </label><input type="number" min="1" placeholder="User ID" list="defaultNumbers"
-                                              id="vk_id">
+        <label for="vk_id">Id: </label><input id="vk_id" list="defaultNumbers" min="1" placeholder="User ID"
+                                              type="number">
         <input id="run" type="button" value="RUN">
         <datalist id="defaultNumbers">
             <option value="147946476">
             <option value="178443156">
         </datalist>
     </div>
-    <a th:unless="${loggedIn}" id="big-login"
-       href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120">
+    <a href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120" id="big-login"
+       th:unless="${loggedIn}">
         LOGIN
     </a>
 </div>
