@@ -8,6 +8,7 @@ import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.users.Fields;
@@ -16,12 +17,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.snchz29.auth.AuthData;
+import org.springframework.stereotype.Component;
 import ru.snchz29.models.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 200;
@@ -29,9 +31,9 @@ public class ApiClient {
     private final VkApiClient apiClient;
     private UserActor userActor;
 
-    public ApiClient(AuthData authData, VkApiClient apiClient) {
+    public ApiClient(AuthData authData) {
         this.authData = authData;
-        this.apiClient = apiClient;
+        this.apiClient = new VkApiClient(new HttpTransportClient());
     }
 
     public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException, InterruptedException {

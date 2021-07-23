@@ -3,17 +3,15 @@ package ru.snchz29.controllers;
 import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
-import org.springframework.stereotype.Controller;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph;
 
-@Controller
+@RestController
+@EnableAutoConfiguration
 @RequestMapping("/")
 public class MainController {
     private final ApiClient apiClient;
@@ -27,7 +25,7 @@ public class MainController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("loggedIn", apiClient.isLoggedIn());
-        return "index";
+        return "start";
     }
 
     @GetMapping("/result/{id}")
