@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
-    private static final int TIMEOUT = 200;
+    private static final int TIMEOUT = 400;
     private final AuthData authData;
     private final VkApiClient apiClient;
     private UserActor userActor;
@@ -88,33 +88,11 @@ public class ApiClient {
         return true;
     }
 
-    public String getName(Integer id) throws ClientException, ApiException, InterruptedException {
-        Thread.sleep(TIMEOUT);
-        logger.info("Get name of " + id);
-        if (isUserNotValid(id))
-            return null;
-        GetResponse user = apiClient
-                .users()
-                .get(userActor)
-                .lang(Lang.RU)
-                .userIds(String.valueOf(id))
-                .execute().get(0);
-        return user.getFirstName() + " " + user.getLastName() + "(" + id + ")";
-    }
-
     public List<Photo> getUserAvatars(Integer userId) throws ClientException, ApiException, InterruptedException {
         Thread.sleep(TIMEOUT);
         return apiClient.photos().get(userActor)
                 .ownerId(userId).albumId("profile")
                 .execute().getItems();
-    }
-
-    public String getAvatarURL(Integer userId) throws ClientException, ApiException, InterruptedException {
-        List<Photo> profilePhotoList = getUserAvatars(userId);
-        if (profilePhotoList.size() == 0)
-            return "https://vk.com/images/camera_50.png";
-        Photo avatarItself = profilePhotoList.get(profilePhotoList.size() - 1);
-        return avatarItself.getSizes().get(0).getUrl().toString();
     }
 
     public void login(String code) {
