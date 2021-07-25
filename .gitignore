@@ -23,7 +23,7 @@
 hs_err_pid*
 
 # private files
-src/main/resources/app.properties
+src/main/resources/vkAuth.properties
 
 # idea files
 .idea

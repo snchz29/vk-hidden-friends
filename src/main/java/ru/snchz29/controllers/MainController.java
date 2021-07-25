@@ -33,7 +33,7 @@ public class MainController {
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
         try {
-            Multimap<Person, Person> result = friendshipGraph.findHiddenFriends(id, 0);
+            Multimap<Person, Person> result = friendshipGraph.findHiddenFriends(id, 3);
             model.addAttribute("loggedIn", apiClient.isLoggedIn());
             model.addAttribute("result", result);
             return "result";

@@ -5,6 +5,7 @@ import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@Component
 public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;

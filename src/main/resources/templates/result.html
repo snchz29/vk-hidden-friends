@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<nav th:insert="~{navbar :: navbar}"></nav>
+<nav th:replace="~{navbar :: navbar}"></nav>
 <div class="container">
     <div th:each="user : ${result.keySet()}">
         <div class="pair" th:each="friend: ${result.get(user)}">

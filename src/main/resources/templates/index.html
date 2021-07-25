@@ -9,7 +9,7 @@
     <title>HiddenFriends</title>
 </head>
 <body>
-<nav th:insert="~{navbar :: navbar}"></nav>
+<nav th:replace="~{navbar :: navbar}"></nav>
 <div class="form">
     <div th:if="${loggedIn}">
         <label for="vk_id">Id: </label><input id="vk_id" list="defaultNumbers" min="1" placeholder="User ID"
@@ -27,8 +27,11 @@
 </div>
 
 <script>
-    document.getElementById("run").onclick = function () {
-        location.href = `http://localhost:8080/result/${document.getElementById("vk_id").value}`
+    button = document.getElementById("run")
+    if (button != null) {
+        button.onclick = function () {
+            location.href = `http://localhost:8080/result/${document.getElementById("vk_id").value}`
+        }
     }
 </script>
 </body>
