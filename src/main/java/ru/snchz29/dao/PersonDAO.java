@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.snchz29.models.Person;
 
-import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -29,20 +29,18 @@ public class PersonDAO {
 
     public void savePerson(Person person) {
         logger.info("Save " + person.getFirstName() + " " + person.getLastName());
-        jdbcTemplate.update("INSERT INTO person(vk_id, first_name, last_name, photo_uri, created_on, friends) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)",
-                person.getId(),
-                person.getFirstName(),
-                person.getLastName(),
-                person.getPhotoUri(),
-                getCurrentTimestamp(),
-                createSqlArray(person.getFriends()));
-    }
 
-    public void savePeople(List<Person> people) {
-        for (Person person : people) {
-            savePerson(person);
-        }
+        jdbcTemplate.update(connection -> {
+            final String sqlUpdate = "INSERT INTO person(vk_id, first_name, last_name, photo_uri, created_on, friends) VALUES (?, ?, ?, ?, ?, ?)";
+            final PreparedStatement ps = connection.prepareStatement(sqlUpdate);
+            ps.setInt(1, person.getId());
+            ps.setString(2, person.getFirstName());
+            ps.setString(3, person.getLastName());
+            ps.setString(4, person.getPhotoUri());
+            ps.setTimestamp(5, getCurrentTimestamp());
+            ps.setArray(6, connection.createArrayOf("integer", person.getFriends().toArray()));
+            return ps;
+        });
     }
 
     public List<Person> getAllPersons() {
@@ -61,15 +59,6 @@ public class PersonDAO {
         Date date = new Date();
         long time = date.getTime();
         return new Timestamp(time);
-    }
-
-    private java.sql.Array createSqlArray(List<Integer> list) {
-        java.sql.Array intArray = null;
-        try {
-            intArray = jdbcTemplate.getDataSource().getConnection().createArrayOf("integer", list.toArray());
-        } catch (SQLException ignore) {
-        }
-        return intArray;
     }
 }
 
