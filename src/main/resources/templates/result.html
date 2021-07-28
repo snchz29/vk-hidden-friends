@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-    <title>Result</title>
-</head>
+<head th:replace="~{headers :: headers}"></head>
 
 <body>
 <nav th:replace="~{navbar :: navbar}"></nav>
@@ -17,14 +10,14 @@
             <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
                th:target="_blank">
                 <div class="left-person">
-                    <div class="image"><img class="photo" th:src="${user.getPhotoUri()}"></div>
+                    <div><img class="photo" th:src="${user.getPhotoUri()}"></div>
                     <div th:text="${user.getLastName() + ' ' + user.getFirstName()}"></div>
                 </div>
             </a>
             <a th:href="@{https://vk.com/__${'id' + friend.getId()}__}"
                th:target="_blank">
                 <div class="right-person">
-                    <div class="image"><img class="photo" th:src="${friend.getPhotoUri()}"></div>
+                    <div><img class="photo" th:src="${friend.getPhotoUri()}"></div>
                     <div th:text="${friend.getLastName() + ' ' + friend.getFirstName()}"></div>
                 </div>
             </a>
