@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Comparator;
 import java.util.List;
 
 @NoArgsConstructor
@@ -24,6 +25,17 @@ public class Person {
     @JsonAlias("photo_400")
     private String photoUri;
     private List<Integer> friends;
+
+    public static Comparator<Person> comparator = (lhs, rhs) -> {
+        if (lhs == rhs)
+            return 0;
+        if (lhs == null)
+            return -1;
+        if (rhs == null)
+            return 1;
+        return (lhs.getLastName() + lhs.getFirstName()).compareTo(rhs.getLastName() + rhs.getFirstName());
+    };
+
 
     @Override
     public String toString() {

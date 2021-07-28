@@ -10,7 +10,6 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.UserAuthResponse;
-import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
-    private static final int TIMEOUT = 400;
+    private static final int TIMEOUT = 300;
     private final AuthData authData;
     private final VkApiClient apiClient;
     private UserActor userActor;
@@ -42,19 +41,9 @@ public class ApiClient {
         return apiClient.friends().get(userActor).userId(id).execute().getItems();
     }
 
-    public List<Person> getUsers(List<Integer> id) throws InterruptedException, ClientException {
-        Thread.sleep(TIMEOUT);
+    public List<Person> getUsers(List<Integer> ids) throws InterruptedException, ClientException {
+        String response = getJSONUsers(ids);
         ObjectMapper objectMapper = new ObjectMapper();
-        String response = apiClient
-                .users()
-                .get(userActor)
-                .lang(Lang.RU)
-                .userIds(id
-                        .stream()
-                        .map(String::valueOf)
-                        .collect(Collectors.toList()))
-                .fields(Fields.PHOTO_400)
-                .executeAsString();
         try {
             String jsonArray = new JSONObject(response).getJSONArray("response").toString();
             List<Person> people = objectMapper.readValue(jsonArray, new TypeReference<List<Person>>() {
@@ -69,6 +58,20 @@ public class ApiClient {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getJSONUsers(List<Integer> ids) throws InterruptedException, ClientException {
+        Thread.sleep(TIMEOUT);
+        return apiClient
+                .users()
+                .get(userActor)
+                .lang(Lang.RU)
+                .userIds(ids
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList()))
+                .fields(Fields.PHOTO_400)
+                .executeAsString();
     }
 
     public boolean isUserNotValid(Integer id) throws ClientException, ApiException, InterruptedException {
@@ -86,13 +89,6 @@ public class ApiClient {
             e.getMessage();
         }
         return true;
-    }
-
-    public List<Photo> getUserAvatars(Integer userId) throws ClientException, ApiException, InterruptedException {
-        Thread.sleep(TIMEOUT);
-        return apiClient.photos().get(userActor)
-                .ownerId(userId).albumId("profile")
-                .execute().getItems();
     }
 
     public void login(String code) {

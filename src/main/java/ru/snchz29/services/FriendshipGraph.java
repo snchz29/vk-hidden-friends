@@ -5,17 +5,16 @@ import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;
@@ -31,6 +30,26 @@ public class FriendshipGraph {
         initPeople();
     }
 
+    public Multimap<Person, Person> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
+        graph = getFriendsGraphRecursion(depth, seed);
+        Multimap<Person, Person> result = TreeMultimap.create(Person.comparator, Person.comparator);
+        for (Integer hiddenId : graph.keySet()) {
+            for (Integer hidId : graph.get(hiddenId)) {
+                if (graph.get(hidId) == null)
+                    continue;
+                if (graph.get(hidId).contains(hiddenId))
+                    continue;
+                if (!graph.get(hiddenId).contains(hidId))
+                    continue;
+
+                Person hiddenPerson = getPerson(hiddenId);
+                Person hidPerson = getPerson(hidId);
+                result.put(hidPerson, hiddenPerson);
+            }
+        }
+        return result;
+    }
+
     private void initGraph() {
         List<Person> users = personDAO.getAllPersons();
         graph = users.stream().collect(Collectors.toMap(Person::getId, Person::getFriends));
@@ -43,17 +62,13 @@ public class FriendshipGraph {
                 .collect(Collectors.toMap(Person::getId, (instance) -> instance));
     }
 
-    private Map<Integer, List<Integer>> getFriendsGraphRecursion(int depth,
-                                                                 Integer id)
+    private Map<Integer, List<Integer>> getFriendsGraphRecursion(int depth, Integer id)
             throws ClientException, ApiException, InterruptedException {
         if (depth == 0 || apiClient.isUserNotValid(id)) {
             return graph;
         }
-
         List<Integer> friends = getFriends(id);
-
         graph.put(id, friends);
-
         for (Integer friend : friends) {
             if (Math.random() < depth * width / (double) friends.size()) {
                 getFriendsGraphRecursion(depth - 1, friend);
@@ -64,7 +79,6 @@ public class FriendshipGraph {
 
     private List<Integer> getFriends(Integer id) throws ClientException, ApiException, InterruptedException {
         List<Integer> friends = graph.get(id);
-
         if (friends == null) {
             friends = apiClient.getUserFriendsIds(id);
             Person user = apiClient.getUsers(Collections.singletonList(id)).get(0);
@@ -86,34 +100,5 @@ public class FriendshipGraph {
         Person user = apiClient.getUsers(Collections.singletonList(id)).get(0);
         user.setFriends(apiClient.getUserFriendsIds(id));
         return user;
-    }
-
-    public Multimap<Person, Person> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
-        graph = getFriendsGraphRecursion(depth, seed);
-        Comparator<Person> personComparator = (lhs, rhs) -> {
-            if (lhs == rhs)
-                return 0;
-            if (lhs == null)
-                return -1;
-            if (rhs == null)
-                return 1;
-            return (lhs.getLastName() + lhs.getFirstName()).compareTo(rhs.getLastName() + rhs.getFirstName());
-        };
-        Multimap<Person, Person> result = TreeMultimap.create(personComparator, personComparator);
-        for (Integer hiddenId : graph.keySet()) {
-            for (Integer hidId : graph.get(hiddenId)) {
-                if (graph.get(hidId) == null)
-                    continue;
-                if (graph.get(hidId).contains(hiddenId))
-                    continue;
-                if (!graph.get(hiddenId).contains(hidId))
-                    continue;
-
-                Person hiddenPerson = getPerson(hiddenId);
-                Person hidPerson = getPerson(hidId);
-                result.put(hidPerson, hiddenPerson);
-            }
-        }
-        return result;
     }
 }
