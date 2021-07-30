@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
-import ru.snchz29.services.FriendshipGraph;
+import ru.snchz29.services.FriendshipGraphImplWithDB;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
     private final ApiClient apiClient;
-    private final FriendshipGraph friendshipGraph;
+    private final FriendshipGraphImplWithDB friendshipGraph;
     private Multimap<Person, Person> result;
 
-    public MainController(ApiClient apiClient, FriendshipGraph friendshipGraph) {
+    public MainController(ApiClient apiClient, FriendshipGraphImplWithDB friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
     }
