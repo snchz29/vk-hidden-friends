@@ -4,7 +4,9 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
@@ -18,21 +20,31 @@ import java.util.stream.Collectors;
 public class FriendshipGraph {
     private final ApiClient apiClient;
     private final PersonDAO personDAO;
-    Map<Integer, List<Integer>> graph;
-    Map<Integer, Person> people;
+    private Map<Integer, List<Integer>> graph;
+    private Map<Integer, Person> people;
+    private Multimap<Person, Person> result;
     @Value("${graph.width}")
     private Integer width;
 
     public FriendshipGraph(ApiClient apiClient, PersonDAO personDAO) {
         this.apiClient = apiClient;
         this.personDAO = personDAO;
-        initGraph();
+        this.result = TreeMultimap.create(Person.comparator, Person.comparator);
         initPeople();
+        initGraph();
     }
 
-    public Multimap<Person, Person> findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
+    @Async
+    public void findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException {
         graph = getFriendsGraphRecursion(depth, seed);
-        Multimap<Person, Person> result = TreeMultimap.create(Person.comparator, Person.comparator);
+    }
+
+    public Multimap<Person, Person> getResult() {
+        return result;
+    }
+
+    @SneakyThrows
+    private void updateResult() {
         for (Integer hiddenId : graph.keySet()) {
             for (Integer hidId : graph.get(hiddenId)) {
                 if (graph.get(hidId) == null)
@@ -47,12 +59,12 @@ public class FriendshipGraph {
                 result.put(hidPerson, hiddenPerson);
             }
         }
-        return result;
     }
 
     private void initGraph() {
         List<Person> users = personDAO.getAllPersons();
         graph = users.stream().collect(Collectors.toMap(Person::getId, Person::getFriends));
+        updateResult();
     }
 
     private void initPeople() {
@@ -66,6 +78,9 @@ public class FriendshipGraph {
             throws ClientException, ApiException, InterruptedException {
         if (depth == 0 || apiClient.isUserNotValid(id)) {
             return graph;
+        }
+        if (graph.keySet().size() % 40 == 0) {
+            updateResult();
         }
         List<Integer> friends = getFriends(id);
         graph.put(id, friends);

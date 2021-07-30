@@ -18,6 +18,7 @@ import ru.snchz29.services.FriendshipGraph;
 public class MainController {
     private final ApiClient apiClient;
     private final FriendshipGraph friendshipGraph;
+    private Multimap<Person, Person> result;
 
     public MainController(ApiClient apiClient, FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
@@ -33,7 +34,8 @@ public class MainController {
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
         try {
-            Multimap<Person, Person> result = friendshipGraph.findHiddenFriends(id, 3);
+            friendshipGraph.findHiddenFriends(id, 3);
+            result = friendshipGraph.getResult();
             model.addAttribute("loggedIn", apiClient.isLoggedIn());
             model.addAttribute("result", result);
             return "result";
@@ -47,5 +49,13 @@ public class MainController {
     public String login(@RequestParam("code") String code) {
         apiClient.login(code);
         return "redirect:/";
+    }
+
+    @GetMapping("/refresh")
+    public String refresh(Model model){
+        result = friendshipGraph.getResult();
+        model.addAttribute("loggedIn", apiClient.isLoggedIn());
+        model.addAttribute("result", result);
+        return "result::refreshable";
     }
 }

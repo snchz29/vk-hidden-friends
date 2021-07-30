@@ -4,7 +4,7 @@
 
 <body>
 <nav th:replace="~{navbar :: navbar}"></nav>
-<div class="container">
+<div class="container" id="refreshable" th:fragment="refreshable">
     <div th:each="user : ${result.keySet()}">
         <div class="pair" th:each="friend: ${result.get(user)}">
             <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
@@ -24,5 +24,11 @@
         </div>
     </div>
 </div>
+<script>
+    let timerId = setInterval(() => {
+        $('#refreshable').load("/refresh")
+        console.log("Refresh results")
+    }, 15000)
+</script>
 </body>
 </html>
