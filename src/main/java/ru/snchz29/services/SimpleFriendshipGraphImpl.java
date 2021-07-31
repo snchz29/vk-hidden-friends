@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class SimpleFriendshipGraphImpl extends FriendshipGraphImpl{
+public class SimpleFriendshipGraphImpl extends FriendshipGraphImpl {
 
     public SimpleFriendshipGraphImpl(ApiClient apiClient) {
         super(apiClient);

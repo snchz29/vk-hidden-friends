@@ -4,8 +4,10 @@
 
 <body>
 <nav th:replace="~{navbar :: navbar}"></nav>
-<div class="container" id="refreshable" th:fragment="refreshable">
-    <div th:each="user : ${result.keySet()}">
+<!-- TODO add filter by results -->
+<!-- TODO add sorting -->
+<div class="container" >
+    <div id="refreshable" th:fragment="refreshable" th:each="user : ${result.keySet()}">
         <div class="pair" th:each="friend: ${result.get(user)}">
             <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
                th:target="_blank">

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FriendshipGraphImplWithDB extends FriendshipGraphImpl{
+public class FriendshipGraphImplWithDB extends FriendshipGraphImpl {
     private final PersonDAO personDAO;
 
     public FriendshipGraphImplWithDB(ApiClient apiClient, PersonDAO personDAO) {

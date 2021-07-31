@@ -110,8 +110,13 @@ public class ApiClient {
         return userActor != null;
     }
 
+    public void logout() {
+        logger.info("Logout");
+        userActor = null;
+    }
+
     @SneakyThrows
-    private void timeout(){
+    private void timeout() {
         Thread.sleep(TIMEOUT);
     }
 }

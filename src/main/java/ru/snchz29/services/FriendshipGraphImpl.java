@@ -16,16 +16,17 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
     protected Map<Integer, List<Integer>> graph;
     protected Map<Integer, Person> people;
 
-    abstract Person getPerson(Integer id) throws ClientException, ApiException;
-    abstract List<Integer> getFriends(Integer id) throws ClientException, ApiException;
-
     public FriendshipGraphImpl(ApiClient apiClient) {
         this.apiClient = apiClient;
         this.result = TreeMultimap.create(Person.comparator, Person.comparator);
     }
 
+    abstract Person getPerson(Integer id) throws ClientException, ApiException;
+
+    abstract List<Integer> getFriends(Integer id) throws ClientException, ApiException;
+
     @Override
-    public void findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException{
+    public void findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
         graph = getFriendsGraphRecursion(depth, seed, width);
     }
 

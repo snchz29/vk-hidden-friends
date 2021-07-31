@@ -16,16 +16,6 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
-    @JsonAlias("id")
-    private Integer id;
-    @JsonAlias("first_name")
-    private String firstName;
-    @JsonAlias("last_name")
-    private String lastName;
-    @JsonAlias("photo_400")
-    private String photoUri;
-    private List<Integer> friends;
-
     public static Comparator<Person> comparator = (lhs, rhs) -> {
         if (lhs == rhs)
             return 0;
@@ -35,7 +25,15 @@ public class Person {
             return 1;
         return (lhs.getLastName() + lhs.getFirstName()).compareTo(rhs.getLastName() + rhs.getFirstName());
     };
-
+    @JsonAlias("id")
+    private Integer id;
+    @JsonAlias("first_name")
+    private String firstName;
+    @JsonAlias("last_name")
+    private String lastName;
+    @JsonAlias("photo_400")
+    private String photoUri;
+    private List<Integer> friends;
 
     @Override
     public String toString() {
