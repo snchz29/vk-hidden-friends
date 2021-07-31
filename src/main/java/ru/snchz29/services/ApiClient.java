@@ -12,6 +12,7 @@ import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.users.Fields;
 import com.vk.api.sdk.objects.users.responses.GetResponse;
+import lombok.SneakyThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
@@ -35,13 +36,13 @@ public class ApiClient {
         this.apiClient = new VkApiClient(new HttpTransportClient());
     }
 
-    public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException, InterruptedException {
-        Thread.sleep(TIMEOUT);
+    public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException {
+        timeout();
         logger.info("Finding friends of " + id);
         return apiClient.friends().get(userActor).userId(id).execute().getItems();
     }
 
-    public List<Person> getUsers(List<Integer> ids) throws InterruptedException, ClientException {
+    public List<Person> getUsers(List<Integer> ids) throws ClientException {
         String response = getJSONUsers(ids);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -60,8 +61,8 @@ public class ApiClient {
         return null;
     }
 
-    private String getJSONUsers(List<Integer> ids) throws InterruptedException, ClientException {
-        Thread.sleep(TIMEOUT);
+    private String getJSONUsers(List<Integer> ids) throws ClientException {
+        timeout();
         return apiClient
                 .users()
                 .get(userActor)
@@ -74,8 +75,8 @@ public class ApiClient {
                 .executeAsString();
     }
 
-    public boolean isUserNotValid(Integer id) throws ClientException, ApiException, InterruptedException {
-        Thread.sleep(TIMEOUT);
+    public boolean isUserNotValid(Integer id) throws ClientException, ApiException {
+        timeout();
         logger.info("Check user with id: " + id);
         List<GetResponse> result = apiClient.users().get(userActor).userIds(String.valueOf(id)).execute();
         if (result == null)
@@ -107,5 +108,10 @@ public class ApiClient {
 
     public boolean isLoggedIn() {
         return userActor != null;
+    }
+
+    @SneakyThrows
+    private void timeout(){
+        Thread.sleep(TIMEOUT);
     }
 }

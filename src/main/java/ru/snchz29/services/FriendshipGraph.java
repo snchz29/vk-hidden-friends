@@ -8,7 +8,7 @@ import ru.snchz29.models.Person;
 
 public interface FriendshipGraph {
     @Async
-    void findHiddenFriends(Integer seed, int depth) throws ClientException, ApiException, InterruptedException;
+    void findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException;
 
     Multimap<Person, Person> getResult();
 }
