@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
-import ru.snchz29.services.FriendshipGraphImplWithDB;
+import ru.snchz29.services.FriendshipGraph;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
     private final ApiClient apiClient;
-    private final FriendshipGraphImplWithDB friendshipGraph;
+    private final FriendshipGraph friendshipGraph;
     private Multimap<Person, Person> result;
 
-    public MainController(ApiClient apiClient, FriendshipGraphImplWithDB friendshipGraph) {
+    public MainController(ApiClient apiClient, FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
     }
@@ -31,17 +31,23 @@ public class MainController {
         return "index";
     }
 
+    @GetMapping("/result")
+    public String result() {
+        return "redirect:/";
+    }
+
     @GetMapping("/result/{id}")
     public String result(Model model, @PathVariable("id") int id) {
-        try {
-            friendshipGraph.findHiddenFriends(id, 3);
-            result = friendshipGraph.getResult();
-            model.addAttribute("loggedIn", apiClient.isLoggedIn());
-            model.addAttribute("result", result);
-            return "result";
-        } catch (ClientException | InterruptedException | ApiException e) {
-            e.printStackTrace();
-        }
+        if (apiClient.isLoggedIn())
+            try {
+                friendshipGraph.findHiddenFriends(id, 3, 10);
+                result = friendshipGraph.getResult();
+                model.addAttribute("loggedIn", apiClient.isLoggedIn());
+                model.addAttribute("result", result);
+                return "result";
+            } catch (ClientException | ApiException e) {
+                e.printStackTrace();
+            }
         return "redirect:/";
     }
 
@@ -52,7 +58,7 @@ public class MainController {
     }
 
     @GetMapping("/refresh")
-    public String refresh(Model model){
+    public String refresh(Model model) {
         result = friendshipGraph.getResult();
         model.addAttribute("loggedIn", apiClient.isLoggedIn());
         model.addAttribute("result", result);
