@@ -4,13 +4,15 @@
 <body>
 <nav th:replace="~{navbar :: navbar}"></nav>
 <div class="form">
+    <!-- TODO add some searching params-->
     <div th:if="${loggedIn}">
         <label for="vk_id">Id: </label><input id="vk_id" list="defaultNumbers" min="1" placeholder="User ID"
                                               type="number">
-        <input id="run" type="button" value="RUN">
+        <button id="run" onclick="button_clicked()">
+            <img style="width: 15px" th:src="@{/img/search.png}">
+        </button>
         <datalist id="defaultNumbers">
             <option value="147946476">
-            <option value="178443156">
         </datalist>
     </div>
     <a href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120"
@@ -21,11 +23,8 @@
 </div>
 
 <script>
-    button = document.getElementById("run")
-    if (button != null) {
-        button.onclick = function () {
-            location.href = `http://localhost:8080/result/${document.getElementById("vk_id").value}`
-        }
+    function button_clicked() {
+        location.href = `http://localhost:8080/result/${document.getElementById("vk_id").value}`
     }
 </script>
 </body>
