@@ -3,6 +3,7 @@ package ru.snchz29.controllers;
 import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class MainController {
     private final FriendshipGraph friendshipGraph;
     private Multimap<Person, Person> result;
 
-    public MainController(ApiClient apiClient, FriendshipGraph friendshipGraph) {
+    public MainController(ApiClient apiClient, @Qualifier("simpleFriendshipGraphImpl") FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
     }

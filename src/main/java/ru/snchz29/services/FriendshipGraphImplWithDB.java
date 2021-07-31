@@ -1,6 +1,5 @@
 package ru.snchz29.services;
 
-import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ public class FriendshipGraphImplWithDB extends FriendshipGraphImpl{
     public FriendshipGraphImplWithDB(ApiClient apiClient, PersonDAO personDAO) {
         super(apiClient);
         this.personDAO = personDAO;
-        this.result = TreeMultimap.create(Person.comparator, Person.comparator);
         initPeople();
         initGraph();
     }
