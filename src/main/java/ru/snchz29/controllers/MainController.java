@@ -21,7 +21,7 @@ public class MainController {
     private final FriendshipGraph friendshipGraph;
     private Multimap<Person, Person> result;
 
-    public MainController(ApiClient apiClient, @Qualifier("simpleFriendshipGraphImpl") FriendshipGraph friendshipGraph) {
+    public MainController(ApiClient apiClient, @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
     }
@@ -55,6 +55,12 @@ public class MainController {
     @GetMapping("/login")
     public String login(@RequestParam("code") String code) {
         apiClient.login(code);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        apiClient.logout();
         return "redirect:/";
     }
 

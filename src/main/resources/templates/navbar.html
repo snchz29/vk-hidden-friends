@@ -7,6 +7,10 @@
        th:unless="${loggedIn}">
         LOGIN
     </a>
+    <a th:href="@{/logout}" id="logout"
+       th:if="${loggedIn}">
+        LOGOUT
+    </a>
 </nav>
 </body>
 </html>

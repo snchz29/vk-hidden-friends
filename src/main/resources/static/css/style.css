@@ -12,6 +12,8 @@ body {
 }
 
 nav {
+    z-index: 10000;
+    position: fixed;
     background: rgba(0,255,255,1);
     display: inline-block;
     height: 60px;
@@ -32,7 +34,7 @@ nav a {
     float: left;
 }
 
-#login {
+#login, #logout {
     float: right;
 }
 
@@ -64,13 +66,14 @@ input:focus {
 .container {
     position: absolute;
     left: 50%;
-    width: 70%;
+    width: 100%;
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
     margin-top: 10px;
 }
 
 #refreshable{
+    top: 100px;
     width: 100%;
 }
 
