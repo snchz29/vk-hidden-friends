@@ -1,10 +1,18 @@
+html {
+    height: 100%;
+}
+
 body {
-    background: #c0e4fc;
+    height: 100%;
+    background: rgb(0,61,61);
+    background: linear-gradient(0deg, rgba(0,61,61,1) 0%, rgba(0,131,131,1) 50%, rgba(0,255,255,1) 100%);
     font-family: 'Oswald', sans-serif;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 nav {
-    background: #5897bd;
+    background: rgba(0,255,255,1);
     display: inline-block;
     height: 60px;
     width: 100%;
@@ -60,6 +68,10 @@ input:focus {
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
     margin-top: 10px;
+}
+
+#refreshable{
+    width: 100%;
 }
 
 .pair {
