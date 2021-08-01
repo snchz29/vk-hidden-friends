@@ -3,11 +3,12 @@
 <body>
 <nav id="navbar" th:fragment="navbar">
     <a id="title" th:href="@{/}">Hidden Friends</a>
-    <a href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120" id="login"
+    <a href="https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120"
+       id="login"
        th:unless="${loggedIn}">
         LOGIN
     </a>
-    <a th:href="@{/logout}" id="logout"
+    <a id="logout" th:href="@{/logout}"
        th:if="${loggedIn}">
         LOGOUT
     </a>

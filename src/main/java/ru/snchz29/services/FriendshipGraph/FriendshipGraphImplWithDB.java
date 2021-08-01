@@ -1,10 +1,11 @@
-package ru.snchz29.services;
+package ru.snchz29.services.FriendshipGraph;
 
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.springframework.stereotype.Service;
 import ru.snchz29.dao.PersonDAO;
 import ru.snchz29.models.Person;
+import ru.snchz29.services.ApiClient;
 
 import java.util.Collections;
 import java.util.List;

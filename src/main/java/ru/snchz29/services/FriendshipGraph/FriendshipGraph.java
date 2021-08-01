@@ -1,4 +1,4 @@
-package ru.snchz29.services;
+package ru.snchz29.services.FriendshipGraph;
 
 import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;

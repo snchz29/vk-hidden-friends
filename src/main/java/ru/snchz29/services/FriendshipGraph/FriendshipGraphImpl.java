@@ -1,4 +1,4 @@
-package ru.snchz29.services;
+package ru.snchz29.services.FriendshipGraph;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
@@ -6,6 +6,7 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.SneakyThrows;
 import ru.snchz29.models.Person;
+import ru.snchz29.services.ApiClient;
 
 import java.util.List;
 import java.util.Map;
