@@ -4,21 +4,22 @@ html {
 
 body {
     height: 100%;
-    background: rgb(0, 61, 61);
-    background: linear-gradient(0deg, rgba(0, 61, 61, 1) 0%, rgba(0, 131, 131, 1) 50%, rgba(0, 255, 255, 1) 100%);
     font-family: 'Oswald', sans-serif;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background: linear-gradient(0deg, rgba(0, 61, 61, 1) 0%, rgba(0, 131, 131, 1) 50%, rgba(0, 255, 255, 1) 100%) no-repeat fixed;
+    margin: 0;
+    width: 100%;
 }
 
 nav {
+    margin: 0;
     z-index: 10000;
     position: fixed;
     background: rgba(0, 255, 255, 1);
     display: inline-block;
     height: 60px;
     width: 100%;
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px
 }
 
 nav a {
@@ -34,7 +35,7 @@ nav a {
     float: left;
 }
 
-#login, #logout {
+#login, #logout, #timer {
     float: right;
 }
 
@@ -58,23 +59,22 @@ input {
     font-family: inherit;
 }
 
+.radios {
+    display: inline-block
+}
+
 input:focus {
     border: none;
     outline: none;
 }
 
 .container {
-    position: absolute;
-    left: 50%;
     width: 100%;
+    position: absolute;
+    top: 70px;
+    left: 50%;
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
-    margin-top: 10px;
-}
-
-#refreshable {
-    top: 100px;
-    width: 100%;
 }
 
 .pair {
