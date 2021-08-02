@@ -14,6 +14,9 @@ import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 
+import javax.websocket.server.PathParam;
+import java.util.concurrent.Future;
+
 @Controller
 @RequestMapping("/")
 public class MainController {
@@ -38,10 +41,10 @@ public class MainController {
     }
 
     @GetMapping("/result/{id}")
-    public String result(Model model, @PathVariable("id") int id) {
+    public String result(Model model, @PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
         if (apiClient.isLoggedIn())
             try {
-                friendshipGraph.findHiddenFriends(id, 3, 10);
+                friendshipGraph.findHiddenFriends(id, depth, width);
                 result = friendshipGraph.getResult();
                 model.addAttribute("loggedIn", apiClient.isLoggedIn());
                 model.addAttribute("result", result);
