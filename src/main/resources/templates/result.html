@@ -6,8 +6,8 @@
 <nav th:replace="~{navbar :: navbar}"></nav>
 <!-- TODO add filter by results -->
 <!-- TODO add sorting -->
-<div class="container">
-    <div id="refreshable" th:each="user : ${result.keySet()}" th:fragment="refreshable">
+<div class="container" th:fragment="refreshable">
+    <div th:each="user : ${result.keySet()}">
         <div class="pair" th:each="friend: ${result.get(user)}">
             <a th:href="@{https://vk.com/__${'id' + user.getId()}__}"
                th:target="_blank">
@@ -25,12 +25,20 @@
             </a>
         </div>
     </div>
+
 </div>
 <script>
-    let timerId = setInterval(() => {
+    let i = 30
+    setInterval(() => {
+        $('#timer').html(`Results will be updated again in ${--i} seconds`)
+        if (i <= 0) {
+            i = 30
+        }
+    }, 1000)
+    setInterval(() => {
         $('#refreshable').load("/refresh")
         console.log("Refresh results")
-    }, 15000)
+    }, 30000)
 </script>
 </body>
 </html>
