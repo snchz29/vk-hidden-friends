@@ -5,6 +5,8 @@ import com.google.common.collect.TreeMultimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
 
@@ -16,7 +18,8 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
     protected Multimap<Person, Person> result;
     protected Map<Integer, List<Integer>> graph;
     protected Map<Integer, Person> people;
-
+    protected static final Logger logger = LogManager.getLogger(FriendshipGraphImpl.class);
+    
     public FriendshipGraphImpl(ApiClient apiClient) {
         this.apiClient = apiClient;
         this.result = TreeMultimap.create(Person.comparator, Person.comparator);
@@ -28,7 +31,9 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
 
     @Override
     public void findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
-        graph = getFriendsGraphRecursion(depth, seed, width);
+        logger.info("Search starts");
+        logger.info(String.format("Search params: depth=%d width=%d", depth, width));
+        graph = getFriendsGraphRecursion(depth, width, seed);
     }
 
     @Override
@@ -41,8 +46,10 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
         if (depth == 0 || apiClient.isUserNotValid(id)) {
             return graph;
         }
-        if (graph.keySet().size() % 40 == 0) {
+        if (graph.keySet().size() % 20 == 0) {
+            logger.info("Start updating results");
             updateResult();
+            logger.info("Results updated");
         }
         List<Integer> friends = getFriends(id);
         graph.put(id, friends);
