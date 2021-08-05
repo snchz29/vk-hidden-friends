@@ -1,13 +1,10 @@
 package ru.snchz29.controllers;
 
-import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.snchz29.models.Person;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 import ru.snchz29.services.ResponseGenerator;
@@ -21,7 +18,6 @@ public class MainController {
     private final ApiClient apiClient;
     private final FriendshipGraph friendshipGraph;
     private final ResponseGenerator generator;
-    private Multimap<Person, Person> result;
 
     public MainController(ApiClient apiClient,
                           @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph,
@@ -50,8 +46,7 @@ public class MainController {
         if (apiClient.isLoggedIn())
             try {
                 friendshipGraph.findHiddenFriends(id, depth, width);
-                result = friendshipGraph.getResult();
-                return generator.writeResult(result, apiClient.isLoggedIn());
+                return generator.writeResult(friendshipGraph.getResult(), apiClient.isLoggedIn());
             } catch (ClientException | ApiException | IOException e) {
                 e.printStackTrace();
             }
@@ -71,10 +66,12 @@ public class MainController {
     }
 
     @GetMapping("/refresh")
-    public String refresh(Model model) {
-        result = friendshipGraph.getResult();
-        model.addAttribute("loggedIn", apiClient.isLoggedIn());
-        model.addAttribute("result", result);
-        return "result::refreshable";
+    public String refresh() {
+        try {
+            return generator.writeResult(friendshipGraph.getResult(), apiClient.isLoggedIn());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return generator.writeError(500, "Error while updating results");
     }
 }

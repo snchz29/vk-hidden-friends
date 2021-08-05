@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Multimap;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import ru.snchz29.models.Person;
 
@@ -44,5 +45,11 @@ public class ResponseGenerator {
         generator.writeEndObject();
         generator.close();
         return stream.toString();
+    }
+
+    public String writeError(int statusCode, String description) {
+        return new JSONObject()
+                .put("statusCode", statusCode)
+                .put("description", description).toString();
     }
 }
