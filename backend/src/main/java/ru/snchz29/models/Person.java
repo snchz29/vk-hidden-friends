@@ -2,6 +2,7 @@ package ru.snchz29.models;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Person {
     private String lastName;
     @JsonAlias("photo_400")
     private String photoUri;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Integer> friends;
 
     @Override
