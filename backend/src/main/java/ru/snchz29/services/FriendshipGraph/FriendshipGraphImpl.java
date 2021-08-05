@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 abstract class FriendshipGraphImpl implements FriendshipGraph {
+    protected static final Logger logger = LogManager.getLogger(FriendshipGraphImpl.class);
     protected final ApiClient apiClient;
     protected Multimap<Person, Person> result;
     protected Map<Integer, List<Integer>> graph;
     protected Map<Integer, Person> people;
-    protected static final Logger logger = LogManager.getLogger(FriendshipGraphImpl.class);
-    
+
     public FriendshipGraphImpl(ApiClient apiClient) {
         this.apiClient = apiClient;
         this.result = TreeMultimap.create(Person.comparator, Person.comparator);
