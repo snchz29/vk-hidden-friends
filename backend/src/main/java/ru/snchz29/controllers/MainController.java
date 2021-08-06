@@ -4,6 +4,9 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
@@ -11,13 +14,17 @@ import ru.snchz29.services.ResponseGenerator;
 
 import javax.websocket.server.PathParam;
 import java.io.IOException;
+import java.net.URI;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/")
 public class MainController {
     private final ApiClient apiClient;
     private final FriendshipGraph friendshipGraph;
     private final ResponseGenerator generator;
+    @Value("${controller.frontendURL}")
+    private String frontendURL;
 
     public MainController(ApiClient apiClient,
                           @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph,
@@ -54,15 +61,15 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam("code") String code) {
+    public ResponseEntity<Void> login(@RequestParam("code") String code) {
         apiClient.login(code);
-        return index();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public ResponseEntity<Void> logout() {
         apiClient.logout();
-        return index();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
     }
 
     @GetMapping("/refresh")
