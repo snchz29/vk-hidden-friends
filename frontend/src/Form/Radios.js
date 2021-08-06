@@ -1,5 +1,6 @@
 import React from 'react';
 import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import PropTypes from 'prop-types'
 
 function Radios(props) {
   return (
@@ -24,6 +25,13 @@ function Radios(props) {
       </RadioGroup>
     </div>
   );
+}
+
+Radios.propTypes = {
+  name: PropTypes.string.isRequired,
+  values: PropTypes.array.isRequired,
+  setter: PropTypes.func.isRequired,
+  state: PropTypes.number
 }
 
 export default Radios;
