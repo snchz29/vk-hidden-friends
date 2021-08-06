@@ -1,24 +1,26 @@
 form {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 60%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 
 input {
     border: none;
+    border-bottom: 1px solid #00f;
     border-radius: 10px;
-    font-family: inherit;
+    font: inherit;
     margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0);
 }
 
 .radios {
-    display: inline-block
+    display: flex;
+    flex-direction: row;
 }
 
 input:focus {
-    border: none;
     outline: none;
 }
 
@@ -28,10 +30,11 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-#run{
+#run {
     float: right;
 }
 
 legend {
     margin-top: 10px;
+    font-size: large;
 }
