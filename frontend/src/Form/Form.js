@@ -18,7 +18,7 @@ export default class Form extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state)
+    window.location = "http://localhost:3000/"
   }
 
   setVkId(val) {
@@ -43,9 +43,9 @@ export default class Form extends React.Component {
   render() {
     return (
       <Context.Provider value={{state: this.state, setDepth: this.setDepth, setWidth: this.setWidth}}>
-        <form onSubmit={this.handleSubmit}>
+        <form action={"/result"}>
           <legend>Id</legend>
-          <input min="1" placeholder="User ID" type="number" defaultValue={147946476}
+          <input name="id" min="1" placeholder="EntryAccordion ID" type="number" defaultValue={147946476}
                  onChange={(e) => this.setVkId(e.target.value)}/>
           <RadioFields/>
           <Button id="run" type="submit">

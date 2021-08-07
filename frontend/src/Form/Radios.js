@@ -2,26 +2,26 @@ import React from 'react';
 import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import PropTypes from 'prop-types'
 
-function Radios(props) {
+function Radios({name, values, setter, state}) {
   return (
     <div>
-      <legend>{props.name.charAt(0).toUpperCase() + props.name.substring(1)}</legend>
-      <RadioGroup>
-        <FormControlLabel value={props.values[0]}
+      <legend>{name.charAt(0).toUpperCase() + name.substring(1)}</legend>
+      <RadioGroup name={name}>
+        <FormControlLabel value={values[0]}
                           control={<Radio color="default"/>}
-                          label={"Minimal " + props.name}
-                          onChange={props.setter.bind(null, props.values[0])}
-                          checked={props.state === props.values[0]}/>
-        <FormControlLabel value={props.values[1]}
+                          label={"Minimal " + name}
+                          onChange={setter.bind(null, values[0])}
+                          checked={state === values[0]}/>
+        <FormControlLabel value={values[1]}
                           control={<Radio color="default"/>}
-                          label={"Middle " + props.name}
-                          onChange={props.setter.bind(null, props.values[1])}
-                          checked={props.state === props.values[1]}/>
-        <FormControlLabel value={props.values[2]}
+                          label={"Middle " + name}
+                          onChange={setter.bind(null, values[1])}
+                          checked={state === values[1]}/>
+        <FormControlLabel value={values[2]}
                           control={<Radio color="default"/>}
-                          label={"Maximum " + props.name}
-                          onChange={props.setter.bind(null, props.values[2])}
-                          checked={props.state === props.values[2]}/>
+                          label={"Maximum " + name}
+                          onChange={setter.bind(null, values[2])}
+                          checked={state === values[2]}/>
       </RadioGroup>
     </div>
   );
