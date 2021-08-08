@@ -7,12 +7,12 @@ function useQuery() {
 }
 
 const styles = {
-    width: 420,
-    position: "absolute",
-    top: 70,
-    left: "50%",
-    "-webkit-transform": "translate(-50%, 0)",
-    transform: "translate(-50%, 0)"
+  width: 420,
+  position: "absolute",
+  top: 70,
+  left: "50%",
+  "-webkit-transform": "translate(-50%, 0)",
+  transform: "translate(-50%, 0)"
 }
 
 function Result() {
