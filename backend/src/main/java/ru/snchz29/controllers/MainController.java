@@ -18,9 +18,7 @@ import ru.snchz29.services.ResponseGeneratorWrapper;
 
 import javax.websocket.server.PathParam;
 import java.net.URI;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -52,15 +50,13 @@ public class MainController {
     }
 
     @GetMapping("/result/{id}")
-    public String result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
+    public void result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
         if (apiClient.isLoggedIn())
             try {
                 friendshipGraph.findHiddenFriends(id, depth, width);
-                return generateJSON(friendshipGraph.getResult(), apiClient.isLoggedIn());
             } catch (ClientException | ApiException e) {
                 e.printStackTrace();
             }
-        return index();
     }
 
     @GetMapping("/login")
@@ -82,17 +78,16 @@ public class MainController {
 
     @SneakyThrows
     private String generateJSON(Multimap<Person, Person> result, boolean loginState) {
-        List<ResultEntry> resultAsList = result
-                .keySet()
-                .stream()
-                .collect(
-                        LinkedList::new,
-                        (list, user) -> list.add(new ResultEntry(user, result.get(user))),
-                        LinkedList::addAll
-                );
         return ResponseGeneratorWrapper.json().writeStartObject()
                 .writeBooleanField("isLoggedIn", loginState)
-                .writeObjectArray("result", Collections.singletonList(resultAsList))
+                .writeObjectArray("result", result
+                        .keySet()
+                        .stream()
+                        .collect(
+                                LinkedList::new,
+                                (list, user) -> list.add(new ResultEntry(user, result.get(user))),
+                                LinkedList::addAll
+                        ))
                 .writeEndObject()
                 .close()
                 .toString();
