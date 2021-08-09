@@ -14,7 +14,7 @@ function EntryAccordion({person, friends}) {
         <Person person={person}/>
       </AccordionSummary>
       <AccordionDetails
-        style={{backgroundColor: "rgba(0,0,0,0.5)", borderRadius: "1rem"}}>
+        style={{backgroundColor: "rgba(0,0,0,0.5)", borderRadius: "1rem", height: "100%"}}>
         <Friends array={friends}/>
       </AccordionDetails>
     </Accordion>

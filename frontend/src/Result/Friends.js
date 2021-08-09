@@ -7,7 +7,7 @@ function Friends({array}) {
     friendsArray.push(<Person key={friend.id} person={friend} isHiddenFriend={true}/>)
   }
   return (
-    <div style={{width: "100%"}}>{friendsArray}</div>
+    <div style={{width: "100%", height: "100%"}}>{friendsArray}</div>
   )
 }
 

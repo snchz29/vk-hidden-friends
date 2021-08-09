@@ -6,14 +6,13 @@ const styles = {
   mainDiv: {font: "inherit", fontSize: "x-large", width: "100%", height: "100%", cursor: "pointer"},
   linkImg: {width: 30},
   link: {position: "absolute", bottom: 0, right: 0},
-  leftPerson: {
-    image: {width: 150, borderRadius: "2rem", float: "left"},
-    name: {marginLeft: "1rem", float: "left"}
+  user: {
+    image: {width: 150, borderRadius: "2rem"},
   },
-  rightPerson: {
-    image: {marginLeft: "1rem", width: 50, borderRadius: "1rem", float: "right"},
-    name: {float: "right"}
-  }
+  friend: {
+    image: {marginLeft: "1rem", width: 50, borderRadius: "1rem"}
+  },
+  name: {marginLeft: "1rem"}
 }
 
 function Person({person, isHiddenFriend}) {
@@ -36,10 +35,10 @@ function Person({person, isHiddenFriend}) {
     <div style={styles.mainDiv} onClick={openVk}>
       <img src={person.photoUri}
            alt={person.firstName + " " + person.lastName}
-           style={isHiddenFriend ? styles.rightPerson.image : styles.leftPerson.image}/>
-      <div style={isHiddenFriend ? styles.rightPerson.name : styles.leftPerson.name}>
+           style={isHiddenFriend ? styles.friend.image : styles.user.image}/>
+      <span style={styles.name}>
         {person.firstName} {person.lastName}
-      </div>
+      </span>
       {!isHiddenFriend && logo}
     </div>
   )
