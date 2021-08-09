@@ -12,6 +12,7 @@ import ru.snchz29.services.ApiClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 abstract class FriendshipGraphImpl implements FriendshipGraph {
     protected static final Logger logger = LogManager.getLogger(FriendshipGraphImpl.class);
@@ -30,10 +31,11 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
     abstract List<Integer> getFriends(Integer id) throws ClientException, ApiException;
 
     @Override
-    public void findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
+    public CompletableFuture<Integer> findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
         logger.info("Search starts");
         logger.info(String.format("Search params: depth=%d width=%d", depth, width));
         graph = getFriendsGraphRecursion(depth, width, seed);
+        return CompletableFuture.completedFuture(1);
     }
 
     @Override

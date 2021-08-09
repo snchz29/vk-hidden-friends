@@ -19,6 +19,7 @@ import ru.snchz29.services.ResponseGeneratorWrapper;
 import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.LinkedList;
+import java.util.concurrent.CompletableFuture;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -28,6 +29,7 @@ public class MainController {
     private final FriendshipGraph friendshipGraph;
     @Value("${controller.frontendURL}")
     private String frontendURL;
+    private boolean isRunning = false;
 
     public MainController(ApiClient apiClient,
                           @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
@@ -46,14 +48,17 @@ public class MainController {
 
     @GetMapping("/result")
     public String result() {
-        return index();
+        return isRunning ? "RUN" : "NOT RUN";
+//        return index();
     }
 
     @GetMapping("/result/{id}")
     public void result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
-        if (apiClient.isLoggedIn())
+        if (apiClient.isLoggedIn() && !isRunning)
             try {
-                friendshipGraph.findHiddenFriends(id, depth, width);
+                CompletableFuture<Integer> asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
+                isRunning = true;
+                asyncStatus.thenAccept((result) -> isRunning = false);
             } catch (ClientException | ApiException e) {
                 e.printStackTrace();
             }
