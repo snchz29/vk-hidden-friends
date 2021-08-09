@@ -1,20 +1,26 @@
 package ru.snchz29.controllers;
 
+import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.snchz29.models.Person;
+import ru.snchz29.models.ResultEntry;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
-import ru.snchz29.services.ResponseGenerator;
+import ru.snchz29.services.ResponseGeneratorWrapper;
 
 import javax.websocket.server.PathParam;
-import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,16 +28,13 @@ import java.net.URI;
 public class MainController {
     private final ApiClient apiClient;
     private final FriendshipGraph friendshipGraph;
-    private final ResponseGenerator generator;
     @Value("${controller.frontendURL}")
     private String frontendURL;
 
     public MainController(ApiClient apiClient,
-                          @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph,
-                          ResponseGenerator generator) {
+                          @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
-        this.generator = generator;
     }
 
     @GetMapping()
@@ -53,8 +56,8 @@ public class MainController {
         if (apiClient.isLoggedIn())
             try {
                 friendshipGraph.findHiddenFriends(id, depth, width);
-                return generator.writeResult(friendshipGraph.getResult(), apiClient.isLoggedIn());
-            } catch (ClientException | ApiException | IOException e) {
+                return generateJSON(friendshipGraph.getResult(), apiClient.isLoggedIn());
+            } catch (ClientException | ApiException e) {
                 e.printStackTrace();
             }
         return index();
@@ -74,11 +77,24 @@ public class MainController {
 
     @GetMapping("/refresh")
     public String refresh() {
-        try {
-            return generator.writeResult(friendshipGraph.getResult(), apiClient.isLoggedIn());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return generator.writeError(500, "Error while updating results");
+        return generateJSON(friendshipGraph.getResult(), apiClient.isLoggedIn());
+    }
+
+    @SneakyThrows
+    private String generateJSON(Multimap<Person, Person> result, boolean loginState) {
+        List<ResultEntry> resultAsList = result
+                .keySet()
+                .stream()
+                .collect(
+                        LinkedList::new,
+                        (list, user) -> list.add(new ResultEntry(user, result.get(user))),
+                        LinkedList::addAll
+                );
+        return ResponseGeneratorWrapper.json().writeStartObject()
+                .writeBooleanField("isLoggedIn", loginState)
+                .writeObjectArray("result", Collections.singletonList(resultAsList))
+                .writeEndObject()
+                .close()
+                .toString();
     }
 }
