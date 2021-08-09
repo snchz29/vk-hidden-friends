@@ -30,6 +30,7 @@ public class MainController {
     @Value("${controller.frontendURL}")
     private String frontendURL;
     private boolean isRunning = false;
+    private CompletableFuture<Integer> asyncStatus;
 
     public MainController(ApiClient apiClient,
                           @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
@@ -48,15 +49,22 @@ public class MainController {
 
     @GetMapping("/result")
     public String result() {
-        return isRunning ? "RUN" : "NOT RUN";
-//        return index();
+        return index();
+    }
+
+    @GetMapping("/kill")
+    public String kill() {
+        if (isRunning){
+            asyncStatus.cancel(true);
+        }
+        return "kill";
     }
 
     @GetMapping("/result/{id}")
     public void result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
         if (apiClient.isLoggedIn() && !isRunning)
             try {
-                CompletableFuture<Integer> asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
+                asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
                 isRunning = true;
                 asyncStatus.thenAccept((result) -> isRunning = false);
             } catch (ClientException | ApiException e) {
