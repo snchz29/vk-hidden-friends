@@ -7,7 +7,7 @@ function useQuery() {
 }
 
 const styles = {
-  width: 420,
+  width: 500,
   position: "absolute",
   top: 70,
   left: "50%",
@@ -19,22 +19,31 @@ function Result() {
   let query = useQuery();
   let [people, setPeople] = useState([]);
 
+  function refresh(){
+    fetch(`http://localhost:8080/refresh`)
+      .then(res => res.json())
+      .then(response => {
+          if (response.result)
+            setPeople(response.result.map(entry => (<EntryAccordion key={entry.user.id} person={entry.user}
+                                                                    friends={entry.friends}/>)))
+          console.log("refresh")
+        }
+      )
+  }
+
   useEffect(() => {
     fetch(`http://localhost:8080/result/${query.get("id")}?depth=${query.get("depth")}&width=${query.get("width")}`)
-      .then(() => {
-        const interval = setInterval(() => {
-          fetch(`http://localhost:8080/refresh`)
-            .then(res => res.json())
-            .then(response => {
-                setPeople(response.result.map(entry => (<EntryAccordion key={entry.user.id} person={entry.user}
-                                                                       friends={entry.friends}/>)))
-              console.log("refresh")
-              }
-            )
-        }, 5000);
-        return clearInterval(interval);
+      .then(response => {
+        if (response.result)
+          setPeople(response.result.map(entry => (<EntryAccordion key={entry.user.id} person={entry.user}
+                                                                  friends={entry.friends}/>)));
+        refresh();
       })
-  }, [query])
+      .then(() => {
+        const interval = setInterval(refresh, 25000);
+        return () => clearInterval(interval);
+      })
+  }, [query, people])
 
   return (
     <div style={styles}>{people}</div>
