@@ -49,7 +49,7 @@ public class MainController {
 
     @GetMapping("/kill")
     public String kill() {
-        if (isRunning){
+        if (isRunning) {
             asyncStatus.cancel(true);
         }
         return "kill";
@@ -81,23 +81,31 @@ public class MainController {
 
     @GetMapping("/refresh")
     public String refresh() {
-        return generateJSON(friendshipGraph.getResult(), apiClient.isLoggedIn());
+        return generateJSON(friendshipGraph.getResult());
     }
 
     @SneakyThrows
-    private String generateJSON(Multimap<Person, Person> result, boolean loginState) {
-        return ResponseGeneratorWrapper.json().writeStartObject()
-                .writeBooleanField("isLoggedIn", loginState)
-                .writeObjectArray("result", result
-                        .keySet()
-                        .stream()
-                        .collect(
-                                LinkedList::new,
-                                (list, user) -> list.add(new ResultEntry(user, result.get(user))),
-                                LinkedList::addAll
-                        ))
-                .writeEndObject()
-                .close()
-                .toString();
+    private String generateJSON(Multimap<Person, Person> result) {
+        if (apiClient.isLoggedIn())
+            return ResponseGeneratorWrapper.json().writeStartObject()
+                    .writeBooleanField("isLoggedIn", true)
+                    .writeBooleanField("isRunning", isRunning)
+                    .writeObjectArray("result", result
+                            .keySet()
+                            .stream()
+                            .collect(
+                                    LinkedList::new,
+                                    (list, user) -> list.add(new ResultEntry(user, result.get(user))),
+                                    LinkedList::addAll
+                            ))
+                    .writeEndObject()
+                    .close()
+                    .toString();
+        else
+            return ResponseGeneratorWrapper.json().writeStartObject()
+                    .writeBooleanField("isLoggedIn", false)
+                    .writeEndObject()
+                    .close()
+                    .toString();
     }
 }
