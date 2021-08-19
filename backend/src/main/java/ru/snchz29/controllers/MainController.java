@@ -47,11 +47,6 @@ public class MainController {
         return response.toString();
     }
 
-    @GetMapping("/result")
-    public String result() {
-        return index();
-    }
-
     @GetMapping("/kill")
     public String kill() {
         if (isRunning){
