@@ -19,6 +19,7 @@ const styles = {
 
 function Result() {
   let query = useQuery();
+  let [isRunning, setIsRunning] = useState(true);
   let [people, setPeople] = useState([]);
 
   function updateResults() {
@@ -27,8 +28,10 @@ function Result() {
       .then(response => {
           if (response.result)
             setPeople(response.result.map(entry => (<EntryAccordion key={entry.user.id} person={entry.user}
-                                                                    friends={entry.friends}/>)))
-          console.log("refresh")
+                                                                    friends={entry.friends}/>)));
+          console.log("refresh");
+          console.log("isRunning: " + response.isRunning);
+          setIsRunning(response.isRunning);
         }
       )
   }
@@ -37,6 +40,10 @@ function Result() {
 
   useEffect(() => {
     const interval = setInterval(updateResults, 25000);
+    if (!isRunning) {
+      clearInterval(interval)
+      console.log("clear interval")
+    }
     return () => clearInterval(interval);
   })
 
@@ -44,7 +51,7 @@ function Result() {
   return (
     <div style={styles}>
       {people}
-      <Loader/>
+      {isRunning && (<Loader/>)}
     </div>
   );
 }
