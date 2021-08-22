@@ -30,9 +30,9 @@ export default function App() {
         <Route path="/login">
           <Login/>
         </Route>
-        <Route path="/result">
+        {loginData.isLoggedIn && <Route path="/result">
           <Result/>
-        </Route>
+        </Route>}
         <Route path="/">
           {loginData.isLoggedIn && <Form/>}
         </Route>
