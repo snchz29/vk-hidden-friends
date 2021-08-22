@@ -7,7 +7,6 @@ import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +15,7 @@ import ru.snchz29.models.ResultEntry;
 import ru.snchz29.services.ApiClient;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 import ru.snchz29.services.ResponseGeneratorWrapper;
+import ru.snchz29.services.SessionFacade;
 
 import javax.websocket.server.PathParam;
 import java.net.URI;
@@ -24,77 +24,63 @@ import java.util.concurrent.CompletableFuture;
 
 @CrossOrigin(origins = "${controller.frontendURL}")
 @RestController
-@Scope("session")
 @RequestMapping("/")
 public class MainController {
-    private final ApiClient apiClient;
-    private final FriendshipGraph friendshipGraph;
+    private final SessionFacade session;
     @Value("${controller.frontendURL}")
     private String frontendURL;
-    private boolean isRunning = false;
-    private CompletableFuture<Integer> asyncStatus;
+    @Value("${auth.loginLink}")
+    private String loginLink;
 
-    public MainController(ApiClient apiClient,
-                          @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
-        this.apiClient = apiClient;
-        this.friendshipGraph = friendshipGraph;
+    public MainController(SessionFacade sessionFacade) {
+        this.session = sessionFacade;
     }
 
     @GetMapping()
     public String index() {
-        JSONObject response = new JSONObject().put("isLoggedIn", apiClient.isLoggedIn());
-        if (!apiClient.isLoggedIn()) {
-            response.put("loginLink", "https://oauth.vk.com/authorize?client_id=7900610&display=popup&redirect_uri=http://localhost:8080/login&scope=friends,groups,photos&response_type=code&v=5.120");
+        JSONObject response = new JSONObject().put("isLoggedIn", session.isLoggedIn());
+        if (!session.isLoggedIn()) {
+            response.put("loginLink", loginLink);
         }
         return response.toString();
     }
 
     @GetMapping("/kill")
-    public String kill() {
-        if (isRunning) {
-            asyncStatus.cancel(true);
-        }
-        return "kill";
+    public void kill() {
+        session.stop();
     }
 
     @GetMapping("/result/{id}")
     public void result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
-        if (!apiClient.isLoggedIn()){
+        if (!session.isLoggedIn()) {
             return;
         }
-        if (!isRunning)
-            try {
-                asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
-                isRunning = true;
-                asyncStatus.thenAccept((result) -> isRunning = false);
-            } catch (ClientException | ApiException e) {
-                e.printStackTrace();
-            }
+        session.run(id, depth, width);
     }
 
     @GetMapping("/login")
     public ResponseEntity<Void> login(@RequestParam("code") String code) {
-        apiClient.login(code);
+        session.login(code);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
     }
 
     @GetMapping("/logout")
     public ResponseEntity<Void> logout() {
-        apiClient.logout();
+        session.logout();
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
     }
 
     @GetMapping("/refresh")
     public String refresh() {
-        return generateJSON(friendshipGraph.getResult());
+        return generateJSON(session.getResult());
     }
 
     @SneakyThrows
     private String generateJSON(Multimap<Person, Person> result) {
-        if (apiClient.isLoggedIn())
+        if (session.isLoggedIn())
             return ResponseGeneratorWrapper.json().writeStartObject()
                     .writeBooleanField("isLoggedIn", true)
-                    .writeBooleanField("isRunning", isRunning)
+                    .writeBooleanField("isRunning", session.isRunning())
                     .writeObjectArray("result", result
                             .keySet()
                             .stream()

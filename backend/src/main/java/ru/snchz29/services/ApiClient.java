@@ -18,12 +18,14 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 import ru.snchz29.models.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@SessionScope
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 300;
@@ -47,7 +49,7 @@ public class ApiClient {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonArray = new JSONObject(response).getJSONArray("response").toString();
-            List<Person> people = objectMapper.readValue(jsonArray, new TypeReference<List<Person>>() {
+            List<Person> people = objectMapper.readValue(jsonArray, new TypeReference<>() {
             });
             for (Person person : people) {
                 if (person.getPhotoUri() == null) {
