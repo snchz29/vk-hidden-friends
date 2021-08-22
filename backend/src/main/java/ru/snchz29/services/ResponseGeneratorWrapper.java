@@ -43,7 +43,7 @@ public class ResponseGeneratorWrapper {
         }
 
         @SneakyThrows
-        public ResponseGenerator writeObjectArray(String fieldName, List<Object> array) {
+        public ResponseGenerator writeObjectArray(String fieldName, List<?> array) {
             generator.writeFieldName(fieldName);
             generator.writeStartArray();
             for (Object obj : array) {
