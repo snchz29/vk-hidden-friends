@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,9 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.concurrent.CompletableFuture;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${controller.frontendURL}")
 @RestController
+@Scope("session")
 @RequestMapping("/")
 public class MainController {
     private final ApiClient apiClient;
@@ -57,7 +59,10 @@ public class MainController {
 
     @GetMapping("/result/{id}")
     public void result(@PathVariable("id") int id, @PathParam("depth") int depth, @PathParam("width") int width) {
-        if (apiClient.isLoggedIn() && !isRunning)
+        if (!apiClient.isLoggedIn()){
+            return;
+        }
+        if (!isRunning)
             try {
                 asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
                 isRunning = true;
@@ -102,10 +107,6 @@ public class MainController {
                     .close()
                     .toString();
         else
-            return ResponseGeneratorWrapper.json().writeStartObject()
-                    .writeBooleanField("isLoggedIn", false)
-                    .writeEndObject()
-                    .close()
-                    .toString();
+            return index();
     }
 }
