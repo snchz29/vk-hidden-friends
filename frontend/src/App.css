@@ -1,0 +1,28 @@
+nav {
+    margin: 0;
+    z-index: 10000;
+    position: fixed;
+    top: 0;
+    background: rgba(0, 255, 255, 1);
+    display: inline-block;
+    height: 60px;
+    width: 100%;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px
+}
+
+nav a {
+    margin: 5px 10px;
+    display: block;
+    color: black;
+    font-size: xx-large;
+    text-decoration: none;
+}
+
+#title {
+    float: left;
+}
+
+#login, #logout, #timer {
+    float: right;
+}
