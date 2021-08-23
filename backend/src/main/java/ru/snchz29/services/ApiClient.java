@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 300;
-    private final AuthData authData;
+    private final ApplicationAuthData applicationAuthData;
     private final VkApiClient apiClient;
     private UserActor userActor;
 
-    public ApiClient(AuthData authData) {
-        this.authData = authData;
+    public ApiClient(ApplicationAuthData applicationAuthData) {
+        this.applicationAuthData = applicationAuthData;
         this.apiClient = new VkApiClient(new HttpTransportClient());
     }
 
@@ -97,7 +97,7 @@ public class ApiClient {
     public void login(String code) {
         try {
             UserAuthResponse authResponse = apiClient.oAuth()
-                    .userAuthorizationCodeFlow(authData.getAppId(), authData.getSecureKey(), "http://localhost:8080/login", code)
+                    .userAuthorizationCodeFlow(applicationAuthData.getAppId(), applicationAuthData.getSecureKey(), "http://localhost:8080/login", code)
                     .execute();
             if (authResponse != null) {
                 userActor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
