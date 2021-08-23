@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @Setter
-public class AuthData {
+public class ApplicationAuthData {
     @Value("${auth.APP_ID}")
     private Integer appId;
     @Value("${auth.SECURE_KEY}")
