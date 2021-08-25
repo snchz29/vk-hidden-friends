@@ -6,6 +6,7 @@ import com.vk.api.sdk.exceptions.ClientException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.snchz29.models.Person;
@@ -14,7 +15,6 @@ import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-@SessionScope
 public class SessionFacade {
     private final ApiClient apiClient;
     private final FriendshipGraph friendshipGraph;
