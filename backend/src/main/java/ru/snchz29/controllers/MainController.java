@@ -31,12 +31,12 @@ public class MainController {
     }
 
     @GetMapping()
-    public String index() {
-        JSONObject response = new JSONObject().put("isLoggedIn", session.isLoggedIn());
-        if (!session.isLoggedIn()) {
-            response.put("loginLink", loginLink);
+    public String index(@RequestParam(value = "id", required = false) Integer id,
+                        @RequestParam(value = "access_token", required = false) String accessToken) {
+        if (id > 0 && accessToken.length() > 0) {
+            session.setUserActor(id, accessToken);
         }
-        return response.toString();
+        return generateIndexJSON();
     }
 
     @GetMapping("/kill")
@@ -66,11 +66,11 @@ public class MainController {
 
     @GetMapping("/refresh")
     public String refresh() {
-        return generateJSON(session.getResult());
+        return generateResultJSON(session.getResult());
     }
 
     @SneakyThrows
-    private String generateJSON(Multimap<Person, Person> result) {
+    private String generateResultJSON(Multimap<Person, Person> result) {
         if (session.isLoggedIn())
             return ResponseGeneratorWrapper.json().writeStartObject()
                     .writeBooleanField("isLoggedIn", true)
@@ -87,6 +87,14 @@ public class MainController {
                     .close()
                     .toString();
         else
-            return index();
+            return generateIndexJSON();
+    }
+
+    private String generateIndexJSON() {
+        JSONObject response = new JSONObject().put("isLoggedIn", session.isLoggedIn());
+        if (!session.isLoggedIn()) {
+            response.put("loginLink", loginLink);
+        }
+        return response.toString();
     }
 }

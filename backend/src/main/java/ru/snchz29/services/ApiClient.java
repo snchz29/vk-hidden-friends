@@ -108,9 +108,9 @@ public class ApiClient {
         }
     }
 
-    public void setUserActor(Integer user_id, String accessToken) {
-        userActor = new UserActor(user_id, accessToken);
-        logger.info("Successful login for user " + user_id);
+    public void setUserActor(Integer userId, String accessToken) {
+        userActor = new UserActor(userId, accessToken);
+        logger.info("Successful login for user " + userId);
     }
 
     public boolean isLoggedIn() {

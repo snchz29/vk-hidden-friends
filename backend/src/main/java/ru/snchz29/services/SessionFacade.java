@@ -3,12 +3,8 @@ package ru.snchz29.services;
 import com.google.common.collect.Multimap;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
 import ru.snchz29.models.Person;
 import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 
@@ -24,6 +20,10 @@ public class SessionFacade {
     public SessionFacade(ApiClient apiClient, @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
         this.apiClient = apiClient;
         this.friendshipGraph = friendshipGraph;
+    }
+
+    public void setUserActor(Integer userId, String accessToken) {
+        apiClient.setUserActor(userId, accessToken);
     }
 
     public void login(String code) {
