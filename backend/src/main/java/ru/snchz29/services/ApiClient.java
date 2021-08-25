@@ -101,12 +101,16 @@ public class ApiClient {
                     .userAuthorizationCodeFlow(applicationAuthData.getAppId(), applicationAuthData.getSecureKey(), "http://localhost:8080/login", code)
                     .execute();
             if (authResponse != null) {
-                userActor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
-                logger.info("Successful login for user " + authResponse.getUserId());
+                setUserActor(authResponse.getUserId(), authResponse.getAccessToken());
             }
         } catch (ApiException | ClientException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setUserActor(Integer user_id, String accessToken) {
+        userActor = new UserActor(user_id, accessToken);
+        logger.info("Successful login for user " + user_id);
     }
 
     public boolean isLoggedIn() {
