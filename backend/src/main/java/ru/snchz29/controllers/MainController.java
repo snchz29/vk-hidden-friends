@@ -1,26 +1,20 @@
 package ru.snchz29.controllers;
 
 import com.google.common.collect.Multimap;
-import com.vk.api.sdk.exceptions.ApiException;
-import com.vk.api.sdk.exceptions.ClientException;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.snchz29.models.Person;
 import ru.snchz29.models.ResultEntry;
-import ru.snchz29.services.ApiClient;
-import ru.snchz29.services.FriendshipGraph.FriendshipGraph;
 import ru.snchz29.services.ResponseGeneratorWrapper;
 import ru.snchz29.services.SessionFacade;
 
 import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.LinkedList;
-import java.util.concurrent.CompletableFuture;
 
 @CrossOrigin(origins = "${controller.frontendURL}")
 @RestController
