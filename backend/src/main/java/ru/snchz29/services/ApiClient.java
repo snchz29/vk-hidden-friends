@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.snchz29.models.Person;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@SessionScope
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 300;
