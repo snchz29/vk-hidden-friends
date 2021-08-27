@@ -25,17 +25,21 @@ import java.util.stream.Collectors;
 
 @Service
 @Scope("prototype")
-public abstract class ApiClient {
+public class ApiClient {
     private static final Logger logger = LogManager.getLogger(ApiClient.class);
     private static final int TIMEOUT = 300;
     private final VkApiClient apiClient = new VkApiClient(new HttpTransportClient());
+    private UserActor userActor;
 
-    protected abstract UserActor getUserActor();
+    public void setUserActor(UserActor userActor){
+        this.userActor = userActor;
+        logger.info("For ApiClient: " + this + " set UserActor: " + userActor);
+    }
 
     public List<Integer> getUserFriendsIds(Integer id) throws ClientException, ApiException {
         timeout();
         logger.info("Finding friends of " + id);
-        return apiClient.friends().get(getUserActor()).userId(id).execute().getItems();
+        return apiClient.friends().get(userActor).userId(id).execute().getItems();
     }
 
     public List<Person> getUsers(List<Integer> ids) throws ClientException {
@@ -61,7 +65,7 @@ public abstract class ApiClient {
         timeout();
         return apiClient
                 .users()
-                .get(getUserActor())
+                .get(userActor)
                 .lang(Lang.RU)
                 .userIds(ids
                         .stream()
@@ -74,7 +78,7 @@ public abstract class ApiClient {
     public boolean isUserNotValid(Integer id) throws ClientException, ApiException {
         timeout();
         logger.info("Check user with id: " + id);
-        List<GetResponse> result = apiClient.users().get(getUserActor()).userIds(String.valueOf(id)).execute();
+        List<GetResponse> result = apiClient.users().get(userActor).userIds(String.valueOf(id)).execute();
         if (result == null)
             return true;
         GetResponse user = result.get(0);

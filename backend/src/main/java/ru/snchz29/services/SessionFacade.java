@@ -45,7 +45,7 @@ public class SessionFacade {
     public void run(int id, int depth, int width) {
         if (!isRunning)
             try {
-                asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width);
+                asyncStatus = friendshipGraph.findHiddenFriends(id, depth, width, authProcessor.getUserActor());
                 isRunning = true;
                 asyncStatus.thenAccept((result) -> isRunning = false);
             } catch (ClientException | ApiException e) {

@@ -2,6 +2,7 @@ package ru.snchz29.services.FriendshipGraph;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
+import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.SneakyThrows;
@@ -31,8 +32,8 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
     abstract List<Integer> getFriends(Integer id) throws ClientException, ApiException;
 
     @Override
-    public CompletableFuture<Integer> findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
-        logger.info("ApiClient: " + apiClient);
+    public CompletableFuture<Integer> findHiddenFriends(Integer seed, int depth, int width, UserActor userActor) throws ClientException, ApiException {
+        apiClient.setUserActor(userActor);
         logger.info("Search starts");
         logger.info(String.format("Search params: depth=%d width=%d", depth, width));
         graph = getFriendsGraphRecursion(depth, width, seed);

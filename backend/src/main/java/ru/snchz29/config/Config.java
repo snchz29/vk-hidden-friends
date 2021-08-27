@@ -9,19 +9,19 @@ import ru.snchz29.services.AuthProcessor;
 
 @Configuration
 public class Config {
-    private final ApplicationContext context;
+//    private final ApplicationContext context;
 
-    public Config(ApplicationContext context) {
-        this.context = context;
-    }
+//    public Config(ApplicationContext context) {
+//        this.context = context;
+//    }
 
-    @Bean
-    public ApiClient apiClient() {
-        return new ApiClient() {
-            @Override
-            protected UserActor getUserActor() {
-                return context.getBean(AuthProcessor.class).getUserActor();
-            }
-        };
-    }
+//    @Bean
+//    public ApiClient apiClient() {
+//        return new ApiClient() {
+//            @Override
+//            protected UserActor getUserActor() {
+//                return context.getBean(AuthProcessor.class).getUserActor();
+//            }
+//        };
+//    }
 }
