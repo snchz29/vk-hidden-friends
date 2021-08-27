@@ -7,20 +7,17 @@ import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage {
     public WebDriver driver;
+    @FindBy(xpath = "//*[@id=\"login_submit\"]/div/div/input[6]")
+    private WebElement loginField;
+    @FindBy(xpath = "//*[@id=\"login_submit\"]/div/div/input[7]")
+    private WebElement passwordField;
+    @FindBy(xpath = "//*[contains(@id, 'install_allow')]")
+    private WebElement loginBtn;
 
     public LoginPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
     }
-
-    @FindBy(xpath = "//*[@id=\"login_submit\"]/div/div/input[6]")
-    private WebElement loginField;
-
-    @FindBy(xpath = "//*[@id=\"login_submit\"]/div/div/input[7]")
-    private WebElement passwordField;
-
-    @FindBy(xpath = "//*[contains(@id, 'install_allow')]")
-    private WebElement loginBtn;
 
     public void inputLogin(String login) {
         loginField.sendKeys(login);
@@ -30,7 +27,7 @@ public class LoginPage {
         passwordField.sendKeys(password);
     }
 
-    public void clickLoginBtn(){
+    public void clickLoginBtn() {
         loginBtn.click();
     }
 }

@@ -31,11 +31,7 @@ public class MainController {
     }
 
     @GetMapping()
-    public String index(@RequestParam(value = "id", required = false) Integer id,
-                        @RequestParam(value = "access_token", required = false) String accessToken) {
-        if (id > 0 && accessToken.length() > 0) {
-            session.setUserActor(id, accessToken);
-        }
+    public String index() {
         return generateIndexJSON();
     }
 

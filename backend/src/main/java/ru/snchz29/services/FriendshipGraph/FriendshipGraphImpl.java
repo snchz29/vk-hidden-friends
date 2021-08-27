@@ -32,6 +32,7 @@ abstract class FriendshipGraphImpl implements FriendshipGraph {
 
     @Override
     public CompletableFuture<Integer> findHiddenFriends(Integer seed, int depth, int width) throws ClientException, ApiException {
+        logger.info("ApiClient: " + apiClient);
         logger.info("Search starts");
         logger.info(String.format("Search params: depth=%d width=%d", depth, width));
         graph = getFriendsGraphRecursion(depth, width, seed);

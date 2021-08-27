@@ -12,30 +12,30 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class SessionFacade {
-    private final ApiClient apiClient;
+    private final AuthProcessor authProcessor;
     private final FriendshipGraph friendshipGraph;
     private boolean isRunning;
     private CompletableFuture<Integer> asyncStatus;
 
-    public SessionFacade(ApiClient apiClient, @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
-        this.apiClient = apiClient;
+    public SessionFacade(AuthProcessor authProcessor, @Qualifier("friendshipGraphImplWithDB") FriendshipGraph friendshipGraph) {
+        this.authProcessor = authProcessor;
         this.friendshipGraph = friendshipGraph;
     }
 
     public void setUserActor(Integer userId, String accessToken) {
-        apiClient.setUserActor(userId, accessToken);
+        authProcessor.setUserActor(userId, accessToken);
     }
 
     public void login(String code) {
-        apiClient.login(code);
+        authProcessor.login(code);
     }
 
     public void logout() {
-        apiClient.logout();
+        authProcessor.logout();
     }
 
     public boolean isLoggedIn() {
-        return apiClient.isLoggedIn();
+        return authProcessor.isLoggedIn();
     }
 
     public boolean isRunning() {
