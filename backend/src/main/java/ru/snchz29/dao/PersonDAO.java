@@ -19,7 +19,23 @@ public class PersonDAO {
 
     public PersonDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        checkTable();
         deleteObsoleteEntries();
+    }
+
+    private void checkTable() {
+        Integer result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'person' and table_schema = 'public'", Integer.class);
+        logger.info("Quantity of tables: " + result);
+        if (result != null && result == 0){
+            logger.info("Creating table");
+            jdbcTemplate.execute("CREATE TABLE public.person" +
+                    "(   vk_id integer NOT NULL PRIMARY KEY ," +
+                    "    first_name character varying(100)," +
+                    "    last_name character varying(100)," +
+                    "    photo_uri character varying(255)," +
+                    "    created_on timestamp without time zone," +
+                    "    friends integer[])");
+        }
     }
 
     private void deleteObsoleteEntries() {

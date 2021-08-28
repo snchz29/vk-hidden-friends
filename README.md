@@ -14,29 +14,13 @@
 1. Нужно созадать файл `src/main/resources/vkAuth.properties` и внести в него следующие данные:
 
 ```
-APP_ID="ID приложения"
-SECURE_KEY="Защищённый ключ"
-SERVICE_TOKEN="Сервисный ключ доступа"
+auth.APP_ID="ID приложения"
+auth.SECURE_KEY="Защищённый ключ"
+auth.SERVICE_TOKEN="Сервисный ключ доступа"
+auth.loginLink="Ссылка для авторизации"
+test.login="Логин для тестирования"
+test.password="Пароль для тестирования"
 ```
 
 2. Нужно создать и подключить базу данных PostgreSQL.
-Для этого можно воспользоваться следующим SQL-кодом.
-   
-```postgresql
-CREATE TABLE public.person
-(
-    vk_id integer NOT NULL,
-    first_name character varying(20) COLLATE pg_catalog."default",
-    last_name character varying(40) COLLATE pg_catalog."default",
-    photo_uri character varying(255) COLLATE pg_catalog."default",
-    created_on timestamp without time zone,
-    friends integer[],
-    CONSTRAINT person_pkey PRIMARY KEY (vk_id)
-)
-
-    TABLESPACE pg_default;
-
-ALTER TABLE public.person
-    OWNER to postgres;
-```
-
+Никаких таблиц создавать не нужно, при необходимости все создастся автоматически.
