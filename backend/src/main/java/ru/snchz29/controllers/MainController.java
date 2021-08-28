@@ -54,6 +54,13 @@ public class MainController {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
     }
 
+    @GetMapping("/auth")
+    public ResponseEntity<Void> auth(@RequestParam("id") Integer id,
+                                                     @RequestParam("access_token") String accessToken) {
+        session.login(id, accessToken);
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendURL)).build();
+    }
+
     @GetMapping("/logout")
     public ResponseEntity<Void> logout() {
         session.logout();

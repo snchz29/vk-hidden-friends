@@ -22,12 +22,12 @@ public class SessionFacade {
         this.friendshipGraph = friendshipGraph;
     }
 
-    public void setUserActor(Integer userId, String accessToken) {
-        authProcessor.setUserActor(userId, accessToken);
-    }
-
     public void login(String code) {
         authProcessor.login(code);
+    }
+
+    public void login(Integer id, String accessToken) {
+        authProcessor.loginWithAccessToken(id, accessToken);
     }
 
     public void logout() {

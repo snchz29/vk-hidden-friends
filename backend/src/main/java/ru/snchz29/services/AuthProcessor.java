@@ -31,14 +31,14 @@ public class AuthProcessor {
                     .userAuthorizationCodeFlow(applicationAuthData.getAppId(), applicationAuthData.getSecureKey(), "http://localhost:8080/login", code)
                     .execute();
             if (authResponse != null) {
-                setUserActor(authResponse.getUserId(), authResponse.getAccessToken());
+                loginWithAccessToken(authResponse.getUserId(), authResponse.getAccessToken());
             }
         } catch (ApiException | ClientException e) {
             e.printStackTrace();
         }
     }
 
-    public void setUserActor(Integer userId, String accessToken) {
+    public void loginWithAccessToken(Integer userId, String accessToken) {
         userActor = new UserActor(userId, accessToken);
         logger.info("Successful login for user " + userId);
     }

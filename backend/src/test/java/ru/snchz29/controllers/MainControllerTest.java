@@ -1,40 +1,25 @@
 package ru.snchz29.controllers;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class MainControllerTest {
-    public static LoginPage loginPage;
-    private static WebDriver driver;
-
-    static {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        loginPage = new LoginPage(driver);
-    }
-
     @Autowired
     private MainController controller;
     // Should be in vkAuth.properties
-    @Value("${test.login}")
-    private String login;
+    @Value("${test.vk_id}")
+    private Integer vkId;
     // Should be in vkAuth.properties
-    @Value("${test.password}")
-    private String password;
+    @Value("${test.access_token}")
+    private String access_token;
 
     @SneakyThrows
     @Test
@@ -55,12 +40,12 @@ class MainControllerTest {
             return null;
     }
 
+    @SneakyThrows
     @Test
     void login() {
-        driver.get(getLoginLink());
-        loginPage.inputLogin(login);
-        loginPage.inputPassword(password);
-        loginPage.clickLoginBtn();
-        driver.quit();
+        controller.auth(vkId, access_token);
+        String responseString = controller.index();
+        JSONObject response = new JSONObject(responseString);
+        assertThat(response.getBoolean("isLoggedIn")).isTrue();
     }
 }
